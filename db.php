@@ -13,8 +13,4 @@ if (!$conn) {
     exit;
 }
 
-$query = "SELECT * FROM users";
-$result = mysqli_query($conn,$query);
-printf("Select returned %d rows.\n", mysqli_num_rows($result));
-mysqli_close($conn);
 ?>

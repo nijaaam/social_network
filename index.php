@@ -1,4 +1,4 @@
-<?php include('db.php');?> 
+<?php include('db.php');?>
 <html>
 
 <head>
@@ -8,100 +8,79 @@
 </head>
 
 <body>
-    <div class="mainr">
-        <form action="login.php" method="post">
-            <div class="qwerty">
-                <div class="label">
-                    <div class="email style1">&nbsp;UserName</div>
-                    <div class="password">&nbsp;&nbsp;Password</div>
-                </div>
-                <div class="label1">
-                    <div class="emailtext">
-                        <input name="UserName" type="text" />
-                    </div>
-                    <div class="passwordtext">
-                        <input name="Password" type="password" />
-                        <input name="submit" type="submit" class="greenButton" value="Login" />
-                    </div>
-                </div>
-                <div class="label2">
-                    <div class="password">&nbsp;&nbsp;Forgot Password?</div>
-                </div>
-            </div>
-        </form>
+    <div class="container">
+        <div class="row">
+            </br>
+            <form id = "login_form" class="pull-right form-inline" method="POST" action="login.php">
+                <label class="sr-only">Username</label>
+                <input type="text" class="form-control" name="username" placeholder="Username">
+                <label class="sr-only">Username</label>
+                <input type="password" class="form-control" name = "password" placeholder="Password">
+                <button type="submit" name="submit1" class="btn btn-primary">Log In</button>
+            </form>
+        </div>
     </div>
-
-    <div class="downleft">
-        <div class="field">
-            <div class="signup">Sign Up</div>
-            <div class="free">It's free, and always will be</div>
-            <div class="text">
-                <form id="signup_form" class="form-horizontal" action="signup.php" method="POST" >
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">First name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="first_name" name="first_name">
-                        </div>
+    <div class="container">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            </br>
+            <form id = "signup_form" class="form-horizontal" action="signup.php" method="POST">
+                 <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">User name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="username">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">Last name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="last_name" name="last_name">
-                        </div>
+                </div>
+                 <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">Password</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="password">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">User name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="username" name="username">
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">First name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="firstname">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">Password</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="password" name="password">
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">Last name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="lastname">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">Address</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="address" name="address">
-                        </div>
+                </div>
+               
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">Email</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="email">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">Contact Number</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter passcode/name">
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">DOB</label>
+                    <div class="col-sm-8">
+                        <input type="text" id ="datepicker"class="form-control" name="dob">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="email" name="email">
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">Security Question</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="question">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label for="description" class="col-sm-2 control-label">Gender</label>
-                        <div class="col-sm-10">
-                            <select name="gender" id="gender" class="form-control">
-                              <option value="0"selected>Male</option>
-                              <option value="1">Female</option>
-                            </select>
-                            <span class="glyphicon form-control-feedback" id="description_error"></span>
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-4 control-label">Security Answer</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="answer">
                     </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">DOB</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="dob" name="dob">
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" name="submit" class="btn btn-default">Sign Up</button>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">Sign in</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -129,19 +108,13 @@
         });
         $('#signup_form').validate({
             rules: {
-                contact: {
-                    required: true,
-                },
-                first_name: {
-                    required: true,
-                },
-                address: {
+                firstname: {
                     required: true,
                 },
                 password: {
                     required: true,
                 },
-                last_name: {
+                lastname: {
                     required: true,
                 },
                 username: {
@@ -149,16 +122,36 @@
                 },
                 email: {
                     required: true,
-                    email: true,
                 },
                 dob: {
+                    required: true,
+                },
+                question: {
+                    required: true,
+                },
+                answer: {
+                    required: true,
+                },
+            },
+        });
+        $('#login_form').validate({
+            rules: {
+                username: {
+                    required: true,
+                },
+                password: {
                     required: true,
                 }
             },
         });
+        $('#login_form').submit(function() {
+            if (!$(this).valid()) {
+                return false;
+            }
+        });
         $('#signup_form').submit(function() {
-            if (!$(this).valid()){
-            	return false;
+            if (!$(this).valid()) {
+                return false;
             }
         });
         $('#dob').datetimepicker({
