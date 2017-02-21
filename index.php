@@ -35,7 +35,7 @@
                  <div class="form-group has-feedback">
                     <label class="col-sm-4 control-label">Password</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" name="password">
+                        <input type="password" class="form-control" name="password">
                     </div>
                 </div>
                 <div class="form-group has-feedback">

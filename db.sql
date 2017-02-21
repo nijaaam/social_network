@@ -23,6 +23,32 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Drop existing tables
+--
+DROP TABLE IF EXISTS blogPostComments;
+DROP TABLE IF EXISTS blogPosts;
+DROP TABLE IF EXISTS blogs;
+DROP TABLE IF EXISTS circleMemberships;
+DROP TABLE IF EXISTS circles;
+DROP TABLE IF EXISTS contactInfo;
+DROP TABLE IF EXISTS generalSettings;
+DROP TABLE IF EXISTS messageCircles;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS messageUsers;
+DROP TABLE IF EXISTS personalInfo;
+DROP TABLE IF EXISTS photoColFriendCirclePermissions;
+DROP TABLE IF EXISTS photoCollection;
+DROP TABLE IF EXISTS photoCollectionPermissions;
+DROP TABLE IF EXISTS photoColUserPermissions;
+DROP TABLE IF EXISTS photoComments;
+DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS relationships;
+DROP TABLE IF EXISTS securitySettings;
+DROP TABLE IF EXISTS settings;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS users;
+
+--
 -- Table structure for table `blogPostComments`
 --
 
