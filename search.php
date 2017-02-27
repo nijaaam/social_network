@@ -13,6 +13,11 @@
     // select loggedin users detail
     $res=mysql_query("SELECT * FROM users WHERE userID=".$_SESSION['user']);
     $userRow=mysql_fetch_array($res);
+
+    $header = "Search results";
+    if($_GET['header'] != ""){
+        $header = $_GET['header'];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -78,15 +83,14 @@
             <ul class="nav navbar-nav">
                 
             <li>         
-                <form name="searchCategory" method="POST" action="search.php" autocomplete="off">
+                <form name="searchAll" method="POST" action="search.php" autocomplete="off">
                     <div class="form-group" style="max-width:300px">
                         <div class="input-group col-md-12">
-                            <input type="text" name="search_friends" class="form-control input-md" placeholder="Search users" />
+                            <input type="text" name="search_friends" class="form-control input-md" placeholder="Search all users" />
                             <span class="input-group-btn">
                                 <button class="btn btn-info btn-md" type="submit">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </button>
-                            </span>
                         </div>
                     </div>        
                 </form>
@@ -100,12 +104,15 @@
         <div class="row">
           <div class="col-md-8">
             <div class="members">
-              <h1 class="page-header">Search results</h1>
+              <h1 class="page-header"><?php echo $header ?></h1>
                 
                 <?php
                     if(isset($_POST['search_friends'])){
                         $search_term = $_POST['search_friends'];
-                        searchmembers($search_term,$_SESSION['user']);
+                        search_members($search_term, 0);
+                    }else if(isset($_GET['search_friends_of_friends'])){
+                        $id = $_GET['search_friends_of_friends'];
+                        search_members(0, $id);
                     }
                 ?>
 

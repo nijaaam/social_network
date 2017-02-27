@@ -17,7 +17,7 @@
 
     if($request == "accept_friend_request"){
         $friendId = $_GET['id'];
-        mysql_query("UPDATE relationships SET invitationAccepted = 1 WHERE (userID1 = '$friendId' AND userID2 = '$userId') OR (userID1 = '$userId' AND userID2 = '$friendId')")or die(mysql_error());
+        mysql_query("UPDATE relationships SET invitationAccepted = 1, timeRequestAccepted = now() WHERE (userID1 = '$friendId' AND userID2 = '$userId') OR (userID1 = '$userId' AND userID2 = '$friendId')")or die(mysql_error());
         header("Location: friends.php");
         exit;
     }	

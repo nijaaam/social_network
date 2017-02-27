@@ -97,6 +97,7 @@
                                 $id = $v[0];
                                 $firstName = $v[1];
                                 $surname = $v[2];
+                                $headerName =  $firstName." ".$surname."'s Friends";
 
                                 ?>
                                   <div class="row member-row">
@@ -112,6 +113,9 @@
                                     </div>
                                     <div class="col-md-3">
                                       <p><a href="view_profile.php?action=view&id=<?php echo $id?>" class="btn btn-primary btn-block"><i class="fa fa-edit"></i> View Profile</a></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <p><a href="search.php?action=view&search_friends_of_friends=<?php echo $id?>&header=<?php echo $headerName ?>" class="btn btn-default btn-block"><i class="fa fa-users"></i> View Friends</a></p>
                                     </div>
                                   </div>
                 <?php
