@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2017 at 08:45 PM
+-- Generation Time: Feb 28, 2017 at 01:33 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -185,7 +185,9 @@ CREATE TABLE IF NOT EXISTS `personalinfo` (
 
 INSERT INTO `personalinfo` (`userID`, `firstName`, `surname`, `gender`, `birthday`, `city`, `country`) VALUES
 (24, 'Osman', 'Ahmed', 'Male', '2017-02-10', 'London', 'United Kingdom'),
-(25, 'Bagus', 'Maulana', 'Male', '2017-02-03', 'Jakarta', 'Indonesia');
+(25, 'Bagus', 'Maulana', 'Male', '2017-02-03', 'Jakarta', 'Indonesia'),
+(26, 'Shivam', 'Bandi', 'Male', '2017-02-12', 'London', 'United Kingdom'),
+(27, 'Nijam', 'Abubakar', 'Male', '2017-02-27', 'Birmingham', 'United Kingdom');
 
 -- --------------------------------------------------------
 
@@ -289,8 +291,12 @@ CREATE TABLE IF NOT EXISTS `relationships` (
 --
 
 INSERT INTO `relationships` (`userID1`, `userID2`, `invitationSentBy`, `invitationAccepted`, `timeRequestSent`, `timeRequestAccepted`) VALUES
-(24, 25, 25, 1, '2017-02-27 18:49:03', '0000-00-00 00:00:00'),
-(25, 24, 25, 1, '2017-02-27 18:49:03', '0000-00-00 00:00:00');
+(24, 25, 25, 1, '2017-02-27 23:16:20', '2017-02-27 23:16:54'),
+(24, 27, 27, 1, '2017-02-27 23:20:37', '2017-02-27 23:20:50'),
+(25, 24, 25, 1, '2017-02-27 23:16:20', '2017-02-27 23:16:54'),
+(25, 26, 25, 1, '2017-02-27 23:16:26', '2017-02-27 23:17:07'),
+(26, 25, 25, 1, '2017-02-27 23:16:26', '2017-02-27 23:17:07'),
+(27, 24, 27, 1, '2017-02-27 23:20:37', '2017-02-27 23:20:50');
 
 -- --------------------------------------------------------
 
@@ -314,7 +320,9 @@ CREATE TABLE IF NOT EXISTS `securitysettings` (
 
 INSERT INTO `securitysettings` (`userID`, `whoCanSeeBlog`, `whoCanSeeProfile`, `whoCanSendFriendRequests`, `visibleName`, `visiblePersonalInfo`) VALUES
 (24, 2, 0, 0, 0, 0),
-(25, 0, 0, 0, 0, 0);
+(25, 0, 0, 0, 0, 0),
+(26, 0, 0, 0, 0, 0),
+(27, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -344,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `userID_2` (`userID`),
   KEY `userID_3` (`userID`),
   KEY `userID_4` (`userID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `users`
@@ -352,7 +360,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`userID`, `email`, `password`, `securityQuestion`, `securityAnswer`) VALUES
 (24, 'osman@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'I done'),
-(25, 'bagus@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Life');
+(25, 'bagus@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Life'),
+(26, 'shivam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Bandi'),
+(27, 'nijam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Word');
 
 --
 -- Constraints for dumped tables
