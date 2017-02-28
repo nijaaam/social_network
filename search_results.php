@@ -16,11 +16,14 @@
             if($friendId == 0){
                 $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
             }
-            else{
-                // mutual friends query.
+            else if($search_term == 0){
+                // friends of friends query.
                 // $query = $query."SELECT f1.userID2 FROM relationships AS f1 JOIN relationships AS f2 USING (userID2) WHERE f1.userID1 = '".$userId."' AND f2.userID1 = '".$mutualUserId."' AND f1.invitationAccepted = '1' AND f2.invitationAccepted = '1' )";
                 $query = "SELECT * FROM `personalinfo` WHERE `userID` != '".$userId."' AND `userID` IN (";
                 $query = $query."SELECT userID2 FROM relationships WHERE userID1 = '".$friendId."' AND invitationAccepted = '1' )";
+            }
+            else{
+                // Collaborative filtering method query goes here.
             }
         
 			$sql = mysql_query($query) or die (mysql_error());

@@ -18,6 +18,13 @@
     if($_GET['header'] != ""){
         $header = $_GET['header'];
     }
+    else if($_POST['search_friends'] != ""){
+        $searchQuery = $_POST['search_friends'];
+        $header = "Search results for: '".$searchQuery."'";
+    }
+    else if(empty($_GET) && empty($_POST)){
+        $header = "Suggested friends";
+    }
 ?>
 
 <!DOCTYPE html>
@@ -113,6 +120,9 @@
                     }else if(isset($_GET['search_friends_of_friends'])){
                         $id = $_GET['search_friends_of_friends'];
                         search_members(0, $id);
+                    }else{
+                        // This is where you put your collaborative filtering method of finding friends.
+                        search_members(-1,-1);
                     }
                 ?>
 
