@@ -17,8 +17,9 @@
         exit;
     }
     // select loggedin users detail
-    $res=mysql_query("SELECT * FROM users WHERE userID=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $email = $_SESSION['email'];
+    $userId = $_SESSION['userId'];
+
 ?>
 
 <!DOCTYPE html>
@@ -58,11 +59,10 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Home</a></li>
+            <li><a href="profile.php">My Profile</a></li>
             <li><a href="friends.php">Friends</a></li>
-            <li><a href="groups.php">Groups</a></li>
+            <li><a href="circles.php">Circles</a></li>
             <li class="active"><a href="photos.php">Photos</a></li>
-            <li><a href="profile.php">Profile</a></li>
             <li><a href="search.php">Search</a></li>
           </ul>
             
@@ -70,7 +70,7 @@
 
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $userRow['email']; ?>&nbsp;<span class="caret"></span></a>
+                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email; ?>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
                   </ul>
@@ -97,7 +97,6 @@
               <li><a href="img/sample5.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample5.jpg" class="img-thumbnail" alt=""></a></li>
               <li><a href="img/sample6.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample6.jpg" class="img-thumbnail" alt=""></a></li>
               <?php
-                
                     $query = "SELECT * FROM photos where photoCollectionID = (SELECT photoCollectionID FROM photocollection WHERE userID = 28);";
                     $res = mysql_query($query) or die("Error in query: $query. ".mysql_error());
                     while($row=mysql_fetch_array($res))
@@ -107,7 +106,7 @@
                      $image_content = base64_encode($row["image"]);
                      $image = "data:image/jpeg;base64,".$image_content;
                      echo "<li><a href='$image' data-hover='tooltip' data-placement='top' title='image' data-gallery='mygallery' data-parent='.gallery-parent' data-title='title' data-footer='this is a footer' data-toggle='lightbox'>"; 
-                     echo '<img src="data:image/jpeg;base64,'. $image_content .'" />';
+                     echo '<img src="data:image/jpeg;base64,'. $image_content .'" alt = " "/>';
                      echo '</a></li>';
                     }
                   ?>

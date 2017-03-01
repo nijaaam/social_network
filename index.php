@@ -47,7 +47,8 @@
 			
 			if( $count == 1 && $row['password']==$password ) {
 				$_SESSION['user'] = $row['userId'];
-                header("Location: home.php");
+                $_SESSION['email'] = $email;
+                header("Location: profile.php");
 			} else {
 				$errMSG = "Incorrect Credentials, Try again...";
 			}

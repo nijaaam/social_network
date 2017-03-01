@@ -24,6 +24,7 @@
             }
             else{
                 // Collaborative filtering method query goes here.
+                $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
             }
         
 			$sql = mysql_query($query) or die (mysql_error());
@@ -71,13 +72,8 @@
                              }
                           ?>
                         <div class="col-md-3">
-                          <p><a href="#" class="btn btn-default btn-block"><i class="fa fa-envelope"></i> Send Message</a></p>
-                        </div>
-                        <div class="col-md-3">
                           <p><a href="view_profile.php?action=view&id=<?php echo $id?>" class="btn btn-primary btn-block"><i class="fa fa-edit"></i> View Profile</a></p>
-                        </div>
-                        <div class="col-md-3">
-                          <p><a href="search.php?action=view&search_friends_of_friends=<?php echo $id?>&header=<?php echo $headerName ?>" class="btn btn-default btn-block"><i class="fa fa-users"></i> View Friends</a></p>
+                          <a href="search.php?action=view&search_friends_of_friends=<?php echo $id?>&header=<?php echo $headerName ?>" class="btn btn-default btn-block"><i class="fa fa-users"></i> View Friends</a>
                         </div>
                       </div>
                     <?php

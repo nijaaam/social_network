@@ -5,7 +5,6 @@
     require_once 'functions.php';
     
     $userId = $_SESSION['user'];
-
     $request = $_GET['request'];
     
     if($request == "add_friend"){
@@ -42,6 +41,17 @@
         }
         
         header("Location: profile.php");
+        exit;
+    }
+
+    if($_POST['send_message_circle'] != ""){
+        $message = $_POST['send_message_circle'];
+        $circleID = $_POST['circleID'];
+        
+        $sql = "INSERT INTO messagecircles (circleID, userID, message, timeSent) VALUES ('$circleID', '$userId', '$message', now())
+";
+        mysql_query($sql) or die(mysql_error());
+        header("Location: view_circle.php?action=view&id=".$circleID);
         exit;
     }
 ?>

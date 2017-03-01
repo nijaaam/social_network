@@ -11,8 +11,9 @@
         exit;
     }
     // select loggedin users detail
-    $res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $email = $_SESSION['email'];
+    $userId = $_SESSION['userId'];
+
 ?>
 
 <!DOCTYPE html>
@@ -50,11 +51,10 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Home</a></li>
+            <li><a href="profile.php">My Profile</a></li>
             <li class="active"><a href="friends.php">Friends</a></li>
-            <li><a href="groups.php">Groups</a></li>
+            <li><a href="circles.php">Circles</a></li>
             <li><a href="photos.php">Photos</a></li>
-            <li><a href="profile.php">Profile</a></li>
             <li><a href="search.php">Search</a></li>
           </ul>
             
@@ -62,7 +62,7 @@
 
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $userRow['email']; ?>&nbsp;<span class="caret"></span></a>
+                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email; ?>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
                   </ul>
@@ -108,9 +108,6 @@
                                       </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                      <p><a href="#" class="btn btn-default btn-block"><i class="fa fa-envelope"></i> Send Message</a></p>
-                                    </div>
                                     <div class="col-md-3">
                                       <p><a href="view_profile.php?action=view&id=<?php echo $id?>" class="btn btn-primary btn-block"><i class="fa fa-edit"></i> View Profile</a></p>
                                     </div>

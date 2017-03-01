@@ -1,1 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<personalinfo>
+	<userID>29</userID>
+	<firstName>nijam</firstName>
+	<surname>nijam</surname>
+	<gender>nijam</gender>
+	<birthday>1996-03-30</birthday>
+	<city>safasfaa</city>
+	<country>sfasfaa</country>
+</personalinfo>
+<user>
+	<email>nijam@a.com</email>
+	<securityQuestion></securityQuestion>
+	<securityAnswer>asafsafas</securityAnswer>
+</user>
+<security>
+	<userID>29</userID>
+	<whoCanSeeBlog>0</whoCanSeeBlog>
+	<whoCanSeeProfile>0</whoCanSeeProfile>
+	<whoCanSendFriendRequests>0</whoCanSendFriendRequests>
+	<visibleName>0</visibleName>
+	<visiblePersonalInfo>0</visiblePersonalInfo>
+</security>
+<friends>
+	<userID1></userID1>
+	<userID2></userID2>
+	<invitationSentBy></invitationSentBy>
+	<invitationAccepted></invitationAccepted>
+	<timeRequestSent></timeRequestSent>
+	<timeRequestAccepted></timeRequestAccepted>
+</friends>

@@ -10,8 +10,13 @@
         exit;
     }
     // select loggedin users detail
+    $email = $_SESSION['email'];
     $userId = $_SESSION['user'];
     $profileUserId = $_GET['id'];
+    if($userId == $profileUserId){
+        header("Location: profile.php");
+        exit; 
+    }
 
     $res = mysql_query("SELECT securitysettings.*, relationships.invitationAccepted FROM securitysettings LEFT JOIN relationships ON userID=$userId WHERE (userID1 = $userId AND userID2 =$profileUserId)");
 //    $res = mysql_query("SELECT * FROM securitysettings WHERE userID=".$profileUserId);
@@ -52,11 +57,10 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Home</a></li>
+            <li><a href="profile.php">My Profile</a></li>
             <li><a href="friends.php">Friends</a></li>
-            <li><a href="groups.php">Groups</a></li>
+            <li><a href="circles.php">Circles</a></li>
             <li><a href="photos.php">Photos</a></li>
-            <li class="active"><a href="profile.php">Profile</a></li>
             <li><a href="search.php">Search</a></li>
           </ul>
             
@@ -64,7 +68,7 @@
             <ul class="nav navbar-nav navbar-right">            
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $userRow['email']; ?>&nbsp;<span class="caret"></span></a>
+                  <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email; ?>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
                   </ul>
@@ -159,7 +163,7 @@
               </div>
               <div class="panel-body">
                 <div style="text-align:center">
-                  <a  class="btn btn-primary" href="#">View All Friends</a>
+                  <a  class="btn btn-primary" href="friends.php">View All Friends</a>
                 </div>
               </div>
             </div>
