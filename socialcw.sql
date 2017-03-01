@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 28, 2017 at 01:33 AM
+-- Generation Time: Mar 01, 2017 at 02:27 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -23,32 +23,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `blogpostcomments`
---
-
-CREATE TABLE IF NOT EXISTS `blogpostcomments` (
-  `commentID` int(11) NOT NULL,
-  `userID` int(11) NOT NULL,
-  `blogID` int(11) NOT NULL,
-  `blogPostID` int(11) NOT NULL,
-  `comment` varchar(240) NOT NULL,
-  `dateTime` datetime NOT NULL,
-  PRIMARY KEY (`commentID`),
-  KEY `userID` (`userID`),
-  KEY `blogID` (`blogID`),
-  KEY `blogPostID` (`blogPostID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `blogposts`
 --
 
 CREATE TABLE IF NOT EXISTS `blogposts` (
   `postID` int(11) NOT NULL,
   `blogID` int(11) NOT NULL,
-  `blogTitle` varchar(240) NOT NULL,
   `dateTime` varchar(240) NOT NULL,
   `blogPostBody` varchar(240) NOT NULL,
   PRIMARY KEY (`postID`),
@@ -65,7 +45,6 @@ CREATE TABLE IF NOT EXISTS `blogposts` (
 CREATE TABLE IF NOT EXISTS `blogs` (
   `blogID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `blogIntro` varchar(240) NOT NULL,
   PRIMARY KEY (`blogID`),
   UNIQUE KEY `userID_2` (`userID`),
   KEY `blogID` (`blogID`),
@@ -81,11 +60,22 @@ CREATE TABLE IF NOT EXISTS `blogs` (
 CREATE TABLE IF NOT EXISTS `circlememberships` (
   `circleID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `isAdmin` tinyint(1) NOT NULL,
-  PRIMARY KEY (`circleID`),
+  PRIMARY KEY (`circleID`,`userID`),
   KEY `userID` (`userID`),
   KEY `circleID` (`circleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `circlememberships`
+--
+
+INSERT INTO `circlememberships` (`circleID`, `userID`) VALUES
+(8, 24),
+(6, 25),
+(6, 26),
+(7, 26),
+(8, 26),
+(7, 27);
 
 -- --------------------------------------------------------
 
@@ -94,11 +84,21 @@ CREATE TABLE IF NOT EXISTS `circlememberships` (
 --
 
 CREATE TABLE IF NOT EXISTS `circles` (
-  `circleID` int(11) NOT NULL,
+  `circleID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(240) NOT NULL,
+  `adminUserId` int(11) NOT NULL,
   PRIMARY KEY (`circleID`),
   KEY `circleID` (`circleID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `circles`
+--
+
+INSERT INTO `circles` (`circleID`, `name`, `adminUserId`) VALUES
+(6, 'First group', 24),
+(7, 'second group', 24),
+(8, 'bagus group', 25);
 
 -- --------------------------------------------------------
 
@@ -133,33 +133,28 @@ CREATE TABLE IF NOT EXISTS `generalsettings` (
 --
 
 CREATE TABLE IF NOT EXISTS `messagecircles` (
-  `messageID` int(11) NOT NULL,
-  `circleID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `messages`
---
-
-CREATE TABLE IF NOT EXISTS `messages` (
-  `messageID` int(11) NOT NULL,
-  `contents` varchar(240) NOT NULL,
-  `timeSent` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `messageusers`
---
-
-CREATE TABLE IF NOT EXISTS `messageusers` (
-  `messageID` int(11) NOT NULL,
+  `messageID` int(11) NOT NULL AUTO_INCREMENT,
+  `circleID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `isSender` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `message` varchar(300) NOT NULL,
+  `timeSent` datetime NOT NULL,
+  PRIMARY KEY (`messageID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+--
+-- Dumping data for table `messagecircles`
+--
+
+INSERT INTO `messagecircles` (`messageID`, `circleID`, `userID`, `message`, `timeSent`) VALUES
+(4, 8, 24, 'asdasd', '2017-02-28 23:09:01'),
+(5, 8, 24, 'asdasd', '2017-02-28 23:09:19'),
+(6, 8, 24, 'skajnkdsf', '2017-02-28 23:11:01'),
+(7, 8, 24, 'skajnkdsfasd asdkjhakdsj ', '2017-02-28 23:11:32'),
+(8, 8, 24, 'awdas', '2017-02-28 23:21:09'),
+(9, 8, 24, 'what do you want', '2017-03-01 00:05:10'),
+(10, 8, 24, 'huh', '2017-03-01 00:06:07'),
+(11, 8, 26, 'what you want to fight?', '2017-03-01 00:25:48'),
+(12, 8, 24, 'no obviously you need your boy bandi for that', '2017-03-01 00:26:05');
 
 -- --------------------------------------------------------
 
@@ -292,9 +287,11 @@ CREATE TABLE IF NOT EXISTS `relationships` (
 
 INSERT INTO `relationships` (`userID1`, `userID2`, `invitationSentBy`, `invitationAccepted`, `timeRequestSent`, `timeRequestAccepted`) VALUES
 (24, 25, 25, 1, '2017-02-27 23:16:20', '2017-02-27 23:16:54'),
+(24, 26, 26, 1, '2017-02-28 12:17:41', '2017-02-28 12:18:30'),
 (24, 27, 27, 1, '2017-02-27 23:20:37', '2017-02-27 23:20:50'),
 (25, 24, 25, 1, '2017-02-27 23:16:20', '2017-02-27 23:16:54'),
 (25, 26, 25, 1, '2017-02-27 23:16:26', '2017-02-27 23:17:07'),
+(26, 24, 26, 1, '2017-02-28 12:17:41', '2017-02-28 12:18:30'),
 (26, 25, 25, 1, '2017-02-27 23:16:26', '2017-02-27 23:17:07'),
 (27, 24, 27, 1, '2017-02-27 23:20:37', '2017-02-27 23:20:50');
 
@@ -321,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `securitysettings` (
 INSERT INTO `securitysettings` (`userID`, `whoCanSeeBlog`, `whoCanSeeProfile`, `whoCanSendFriendRequests`, `visibleName`, `visiblePersonalInfo`) VALUES
 (24, 2, 0, 0, 0, 0),
 (25, 0, 0, 0, 0, 0),
-(26, 0, 0, 0, 0, 0),
+(26, 1, 0, 0, 0, 0),
 (27, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
@@ -352,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `userID_2` (`userID`),
   KEY `userID_3` (`userID`),
   KEY `userID_4` (`userID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `users`
@@ -369,14 +366,6 @@ INSERT INTO `users` (`userID`, `email`, `password`, `securityQuestion`, `securit
 --
 
 --
--- Constraints for table `blogpostcomments`
---
-ALTER TABLE `blogpostcomments`
-  ADD CONSTRAINT `blogPostComments_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userId`),
-  ADD CONSTRAINT `blogPostComments_ibfk_2` FOREIGN KEY (`blogID`) REFERENCES `blogs` (`blogID`),
-  ADD CONSTRAINT `blogPostComments_ibfk_3` FOREIGN KEY (`blogPostID`) REFERENCES `blogposts` (`postID`);
-
---
 -- Constraints for table `blogposts`
 --
 ALTER TABLE `blogposts`
@@ -386,14 +375,7 @@ ALTER TABLE `blogposts`
 -- Constraints for table `blogs`
 --
 ALTER TABLE `blogs`
-  ADD CONSTRAINT `blogs_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userId`);
-
---
--- Constraints for table `circlememberships`
---
-ALTER TABLE `circlememberships`
-  ADD CONSTRAINT `circleMemberships_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userId`),
-  ADD CONSTRAINT `circleMemberships_ibfk_2` FOREIGN KEY (`circleID`) REFERENCES `circles` (`circleID`);
+  ADD CONSTRAINT `blogs_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 
 --
 -- Constraints for table `personalinfo`
