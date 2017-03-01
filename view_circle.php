@@ -103,7 +103,7 @@
             </div>
               
             <div class="panel panel-default post">
-            <div class="panel-body">
+               <div class="panel-body">
               
             <?php 
                 $query = "SELECT personalinfo.userID, message, timeSent, firstName, surname FROM messagecircles JOIN personalinfo ON personalinfo.userID = messagecircles.userID WHERE circleID =".$circleId." ORDER BY timeSent DESC";  
