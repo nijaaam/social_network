@@ -16,6 +16,7 @@
     $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$userId' AND users.userID = '$userId'";
     $res=mysql_query($query) or die(mysql_error());
     $userRow=mysql_fetch_array($res);
+    $fullName = $userRow['firstName']." ".$userRow['surname'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,14 +81,14 @@
         <div class="row">
           <div class="col-md-8">
             <div class="profile">
-              <h1 class="page-header"><?php echo $userRow['firstName']." ".$userRow['surname'];?></h1>
+              <h1 class="page-header"><?php echo $fullName;?></h1>
               <div class="row">
                 <div class="col-md-4">
                   <img src="img/user.png" class="img-thumbnail" alt="">
                 </div>
                 <div class="col-md-8">
                   <ul>
-                    <li><strong>Name: </strong><?php echo $userRow['firstName']." ".$userRow['surname'] ;?></li>
+                    <li><strong>Name: </strong><?php echo $fullName ;?></li>
                     <li><strong>Email: </strong><?php echo $userRow['email'];?></li>
                     <li><strong>City: </strong><?php echo $userRow['city'];?></li>
                     <li><strong>Country: </strong><?php echo $userRow['country'];?></li>
@@ -95,11 +96,15 @@
                     <li><strong>DOB: </strong><?php                                     
                                     $myDateTime = DateTime::createFromFormat('Y-m-d', $userRow['birthday']);
                                     echo $myDateTime->format('d M Y'); ?></li>
+                      
+                    <li>
+                        <br>
+                        <form method="POST" action='export.php'>
+<button type="submit" name="export" class="btn btn-default">Export</button>
+</form>  
+                    </li>    
                   </ul>
                 </div>
-                <form method="POST" action='export.php'>
-<button type="submit" name="export" class="btn btn-default">Export</button>
-</form>
               </div><br><br>
               <div class="row">
                 <div class="col-md-12">
@@ -108,20 +113,54 @@
                       <h3 class="panel-title">Blog Wall</h3>
                     </div>
                     <div class="panel-body">
-                      <form>
-                        <div class="form-group">
-                          <textarea class="form-control" placeholder="Write on the wall"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                      </form>
+                        <form name="blogPostForm" action="functions.php" method="post" onsubmit="return validateInput()">
+                          <div class="form-group">
+                            <textarea name="post_blog" class="form-control" placeholder="Write post"></textarea>
+                          </div>
+                          <button type="submit" class="btn btn-default">Post</button>
+                        </form>
                     </div>
                   </div>
+                    
+                  <div class="panel panel-default post">
+                    <div class="panel-body">
+              
+                    <?php 
+                        $query = "SELECT blogPostBody, dateTime FROM blogPosts WHERE userID =".$userId." ORDER BY dateTime DESC";  
+                        $sql = mysql_query($query);
+                        while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                            $postBody = $row[0];
+                            $timeSent = $row[1];
+                            $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
+                            $timeSent = $myDateTime->format('d/m/Y H:m');
+                    ?> 
+                         <div class="row">
+                           <div class="col-sm-2">
+                             <a href="view_profile.php?action=view&id=<?php echo $userId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
+                           </div>
+                           <div class="col-sm-10">
+                             <div class="bubble">
+                               <div class="pointer">
+                                 <p><?php echo $postBody ?></p>
+                               </div>
+                               <div class="pointer-border"></div>
+                               <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
+                             </div>
+                           </div>
+                         </div>             
+                    <?php  
+                        }
+                    ?>  
+                  </div>
+                </div>                       
+                    
                 </div>
               </div>
             </div>
           </div>
             
           <div class="col-md-4">
+              <br><br><br>
             <div class="panel panel-default friends">
               <div class="panel-heading">
                 <h3 class="panel-title">My Friends</h3>
@@ -244,3 +283,14 @@
     <script src="js/bootstrap.js"></script>
   </body>
 </html>
+
+<script>
+function validateInput(){
+    var a = document.forms["blogPostForm"]["post_blog"].value;
+    
+    if (a == ""){
+        alert("Post cannot be empty.");
+        return false;
+    }
+}
+</script>
