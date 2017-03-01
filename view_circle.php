@@ -16,6 +16,7 @@
     }
     $email = $_SESSION['email'];
     $userId = $_SESSION['user'];
+    require_once 'check_admin.php';
     $circleId = $_GET['id'];
 
     $res = mysql_query("SELECT circleID FROM circlememberships, users WHERE users.userID = ".$userId." AND circlememberships.userID = ".$userId." AND circleID=".$circleId) or die (mysql_error());
@@ -71,6 +72,11 @@
             <ul class="nav navbar-nav navbar-right">
 
                 <li class="dropdown">
+                    <?php
+                    if($isAdmin) {
+                        echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
+                    }
+                    ?>
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email ?>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu">

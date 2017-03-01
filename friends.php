@@ -13,6 +13,7 @@
     // select loggedin users detail
     $email = $_SESSION['email'];
     $userId = $_SESSION['userId'];
+    require_once 'check_admin.php';
 
 ?>
 
@@ -59,7 +60,11 @@
           </ul>
             
             <ul class="nav navbar-nav navbar-right">
-
+                <?php
+                if($isAdmin) {
+                    echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
+                }
+                ?>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email; ?>&nbsp;<span class="caret"></span></a>
@@ -84,7 +89,7 @@
                 
                 
                     <?php
-                        $sql = mysql_query(" SELECT userID, firstName, surname, invitationSentBy, invitationAccepted FROM personalinfo, relationships WHERE (userID1 = '".$_SESSION['user']."' AND userID2 = userID)") or die (mysql_error()); 
+                        $sql = mysql_query(" SELECT userID, firstName, surname, invitationSentBy, invitationAccepted FROM personalinfo, relationships WHERE (userID1 = '".$_SESSION['user']."' AND userID2 = userID)") or die (mysql_error());
                         $array = array();
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
                             $array[] = $row;
@@ -135,7 +140,7 @@
                             $invitationSentBy = $v[3];
                             $invitationAccepted = $v[4];
 
-                            if($invitationSentBy != $_SESSION['user'] && $invitationAccepted == 0){ 
+                            if($invitationSentBy != $_SESSION['user'] && $invitationAccepted == 0){
                                 $id = $v[0];
                                 $firstName = $v[1];
                                 $surname = $v[2];

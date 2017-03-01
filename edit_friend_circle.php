@@ -15,6 +15,7 @@
     // select loggedin users detail
     $userId = $_SESSION['user'];
     $email = $_SESSION['email'];
+    require_once "check_admin.php";
 
     $header = "";
     if($_POST['friend_circle_title'] != ""){
@@ -102,7 +103,11 @@
           </ul>
             
             <ul class="nav navbar-nav navbar-right">
-
+                <?php
+                if($isAdmin) {
+                    echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
+                }
+                ?>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email; ?>&nbsp;<span class="caret"></span></a>

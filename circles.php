@@ -12,6 +12,7 @@
     // select loggedin users detail
     $email = $_SESSION['email'];
     $userId = $_SESSION['userId'];
+    require_once 'check_admin.php';
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +59,11 @@
           </ul>
             
             <ul class="nav navbar-nav navbar-right">
-
+                <?php
+                if($isAdmin) {
+                    echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
+                }
+                ?>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email ?>&nbsp;<span class="caret"></span></a>

@@ -23,6 +23,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admins`
+--
+
+CREATE TABLE IF NOT EXISTS `admins` (
+  `userID` int(11) NOT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `admins` (`userID`) VALUES ('24');
+INSERT INTO `admins` (`userID`) VALUES ('25');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blogposts`
 --
 
@@ -347,6 +361,12 @@ INSERT INTO `users` (`userID`, `email`, `password`, `securityQuestion`, `securit
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `admins`
+--
+ALTER TABLE `admins`
+  ADD CONSTRAINT `admins_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 
 --
 -- Constraints for table `personalinfo`
