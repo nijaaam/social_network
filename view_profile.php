@@ -31,6 +31,7 @@
             $isFriends = true;
         }
     }
+    $profileFullName = "";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,16 +100,20 @@
       <div class="container">
         <div class="row">
           <div class="col-md-8">
+              
+            <!--Profile-->
             <div class="profile">
 
                 <?php
-                if($row['whoCanSeeProfile'] == 0 || ($row['whoCanSeeProfile'] == 1 && $isFriends)) {
+                $canSeeProfile = $row['whoCanSeeProfile'] == 0 || ($row['whoCanSeeProfile'] == 1 && $isFriends || $isAdmin);
+                if($canSeeProfile) {
                     $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$profileUserId' AND users.userID = '$profileUserId'";
+                    $profileFullName = $userRow['firstName'] . " " . $userRow['surname'];
                     $res = mysql_query($query) or die(mysql_error());
                     $userRow = mysql_fetch_array($res);
                 ?>
 
-                    <h1 class="page-header"><?php echo $userRow['firstName'] . " " . $userRow['surname']; ?></h1>
+                    <h1 class="page-header"><?php echo $profileFullName ?></h1>
                     <div class="row">
                         <div class="col-md-4">
                             <img src="img/user.png" class="img-thumbnail" alt="">
@@ -128,8 +133,11 @@
                                     echo $myDateTime->format('d M Y'); ?></li>
                             </ul>
                         </div>
+                    </div>
 
-                <?php } else {
+                <?php 
+                } 
+                else {
                     $query = "SELECT firstName, surname FROM personalinfo WHERE userID='$profileUserId'";
                     $res = mysql_query($query) or die(mysql_error());
                     $userRow = mysql_fetch_array($res);
@@ -146,18 +154,22 @@
                                 <li><strong>You don't have the necessary privileges to view the profile</strong></li>
                             </ul>
                         </div>
+                    </div>
 
               <?php } ?>
 
-                    <?php if(!$isFriends) { ?>
+                    <?php 
+                    if(!$isFriends) { ?>
                         <a href="functions.php?action=view&request=add_friend&id=<?php echo $profileUserId?>">
                             <button type="submit" name="addFriend" class="btn btn-default">Add as Friend</button>
                         </a>
-                    <?php } ?>
+                    <?php 
+                    } ?>
 
                     </div><br><br>
 
-              <div class="row">
+            <!--Blog -->
+            <div class="row">
                 <div class="col-md-12">
                   <div class="panel panel-default">
                     <div class="panel-heading">
@@ -165,33 +177,55 @@
                     </div>
                     <div class="panel-body">
                         
+                    <?php 
+                    $canSeeBlog = $row['whoCanSeeBlog'] == 0 || ($row['whoCanSeeBlog'] == 1 && $isFriends) || $isAdmin; 
+                    if($canSeeBlog){
+
+                        $query = "SELECT blogPostBody, dateTime FROM blogPosts WHERE userID =".$profileUserId." ORDER BY dateTime DESC";  
+                        $sql = mysql_query($query);
+                        
+                        $num_of_row   = mysql_num_rows($sql);
+                        if ($num_of_row == 0 ){
+                             echo "<font color='red' size='4' >User has yet to make any posts.</font>";
+                        }
+
+                        while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                            $postBody = $row[0];
+                            $timeSent = $row[1];
+                            $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
+                            $timeSent = $myDateTime->format('d/m/Y H:m');
+                    ?> 
+                         <div class="row">
+                           <div class="col-sm-2">
+                             <a href="view_profile.php?action=view&id=<?php echo $profileUserId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $profileFullName ?></div></a>
+                           </div>
+                           <div class="col-sm-10">
+                             <div class="bubble">
+                               <div class="pointer">
+                                 <p><?php echo $postBody ?></p>
+                               </div>
+                               <div class="pointer-border"></div>
+                               <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
+                             </div>
+                           </div>
+                         </div>             
+                    <?php  
+                        }
+                    }else { 
+                    ?>
+                              <strong>You don't have the necessary privileges to view the blog</strong>
                     <?php
-                        if($row['whoCanSeeBlog'] == 0 || ($row['whoCanSeeBlog'] == 1 && $isFriends)){
-//                            $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$profileUserId' AND users.userID = '$profileUserId'";
-//                            $res=mysql_query($query) or die(mysql_error());
-//                            $userRow=mysql_fetch_array($res);    
-                    ?>    
-                              <form>
-                                <div class="form-group">
-                                  <textarea class="form-control" placeholder="Write on the wall"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
-                              </form>
-
-                    <?php } else { ?>
-
-                              <li><strong>You don't have the necessary privileges to view the blog</strong></li>
-
-                    <?php } ?>
-
+                    } 
+                    ?>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+                                   
           </div>
             
           <div class="col-md-4">
+              <br><br><br>
             <div class="panel panel-default friends">
               <div class="panel-heading">
                 <h3 class="panel-title">My Friends</h3>
@@ -231,9 +265,6 @@
                   $visibleName = $adminRow['visibleName'];
                   $visiblePersonalInfo = $adminRow['visiblePersonalInfo'];
                   // By default values are equal to 0 which means everyone has these visibility privileges.
-
-                  $res = mysql_query("SELECT userID FROM admins WHERE admins.userID='$profileUserId'") or die(mysql_error());
-                  $isUserAdmin = mysql_num_rows($res);
                   ?>
 
                   <div class="panel-body">
@@ -296,18 +327,6 @@
 
                                   </div>
                               </div>
-                          </div>
-                          <br>
-                          <div class="row member-row">
-                              <?php if($isUserAdmin) { ?>
-                                  <a href="functions.php?action=view&request=remove_admin&id=<?php echo $profileUserId?>">
-                                      <button type="submit" name="removeAdmin" class="btn btn-default">Remove User from Admins</button>
-                                  </a>
-                              <?php } else { ?>
-                                  <a href="functions.php?action=view&request=make_admin&id=<?php echo $profileUserId?>">
-                                      <button type="submit" name="makeAdmin" class="btn btn-default">Make User Admin</button>
-                                  </a>
-                              <?php } ?>
                           </div>
                       </div>
                   </div>

@@ -70,13 +70,12 @@
           </ul>
             
             <ul class="nav navbar-nav navbar-right">
-
+                <?php
+                if($isAdmin) {
+                    echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
+                }
+                ?>
                 <li class="dropdown">
-                    <?php
-                    if($isAdmin) {
-                        echo "<li><p class=\"navbar-text\">Logged in as Administrator </p></li>";
-                    }
-                    ?>
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo $email ?>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu">

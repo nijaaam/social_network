@@ -130,6 +130,7 @@
           </div>
             
           <div class="col-md-4">
+              <br><br><br>
             <div class="panel panel-default friends">
               <div class="panel-heading">
                 <h3 class="panel-title">Friend requests</h3>
