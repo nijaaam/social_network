@@ -231,6 +231,9 @@
                   $visibleName = $adminRow['visibleName'];
                   $visiblePersonalInfo = $adminRow['visiblePersonalInfo'];
                   // By default values are equal to 0 which means everyone has these visibility privileges.
+
+                  $res = mysql_query("SELECT userID FROM admins WHERE admins.userID='$profileUserId'") or die(mysql_error());
+                  $isUserAdmin = mysql_num_rows($res);
                   ?>
 
                   <div class="panel-body">
@@ -293,6 +296,18 @@
 
                                   </div>
                               </div>
+                          </div>
+                          <br>
+                          <div class="row member-row">
+                              <?php if($isUserAdmin) { ?>
+                                  <a href="functions.php?action=view&request=remove_admin&id=<?php echo $profileUserId?>">
+                                      <button type="submit" name="removeAdmin" class="btn btn-default">Remove User from Admins</button>
+                                  </a>
+                              <?php } else { ?>
+                                  <a href="functions.php?action=view&request=make_admin&id=<?php echo $profileUserId?>">
+                                      <button type="submit" name="makeAdmin" class="btn btn-default">Make User Admin</button>
+                                  </a>
+                              <?php } ?>
                           </div>
                       </div>
                   </div>

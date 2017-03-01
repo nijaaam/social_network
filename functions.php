@@ -61,6 +61,20 @@
         exit;
     }
 
+    if($request == "make_admin"){
+        $id = $_GET['id'];
+        mysql_query("INSERT INTO `admins` (`userID`) VALUES ('$id')")or die(mysql_error());
+        header("Location: view_profile.php?action=view&id=$id");
+        exit;
+    }
+
+    if($request == "remove_admin"){
+        $id = $_GET['id'];
+        mysql_query("DELETE FROM `admins` WHERE `admins`.`userID` = '$id'")or die(mysql_error());
+        header("Location: view_profile.php?action=view&id=$id");
+        exit;
+    }
+
     if($_POST['send_message_circle'] != ""){
         $message = $_POST['send_message_circle'];
         $circleID = $_POST['circleID'];
