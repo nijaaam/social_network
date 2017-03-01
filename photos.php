@@ -3,7 +3,14 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
-
+    if (isset($_POST['upload'])) {
+        $name=$_FILES["img"]["name"]; 
+        $content=addslashes(file_get_contents($_FILES['img']['tmp_name']));
+        $date = "2015-01-01";
+        $insert_image="INSERT INTO photos (photoCollectionID,name,string,caption,dateUploaded,image) VALUES(0,'$name','stri','cap','$date','$content');";
+        //mysql_query("INSERT INTO photocollection (userID) values(28)");
+        mysql_query($insert_image) or die("Error in query: $query. ".mysql_error());
+    }
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
         header("Location: index.php");
@@ -78,6 +85,10 @@
         <div class="row">
           <div class="col-md-8">
             <h1 class="page-header">Photos</h1>
+            <form method="POST" enctype="multipart/form-data">
+              <input type="file" name="img">
+              <input type="submit" name="upload" value="Upload">
+              </form>
             <ul class="photos gallery-parent">
               <li><a href="img/sample1.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample1.jpg" class="img-thumbnail" alt=""></a></li>
               <li><a href="img/sample2.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample2.jpg" class="img-thumbnail" alt=""></a></li>
@@ -85,6 +96,21 @@
               <li><a href="img/sample4.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample4.jpg" class="img-thumbnail" alt=""></a></li>
               <li><a href="img/sample5.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample5.jpg" class="img-thumbnail" alt=""></a></li>
               <li><a href="img/sample6.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample6.jpg" class="img-thumbnail" alt=""></a></li>
+              <?php
+                
+                    $query = "SELECT * FROM photos where photoCollectionID = (SELECT photoCollectionID FROM photocollection WHERE userID = 28);";
+                    $res = mysql_query($query) or die("Error in query: $query. ".mysql_error());
+                    while($row=mysql_fetch_array($res))
+                    {
+                     $image_name=$row["name"];
+                     
+                     $image_content = base64_encode($row["image"]);
+                     $image = "data:image/jpeg;base64,".$image_content;
+                     echo "<li><a href='$image' data-hover='tooltip' data-placement='top' title='image' data-gallery='mygallery' data-parent='.gallery-parent' data-title='title' data-footer='this is a footer' data-toggle='lightbox'>"; 
+                     echo '<img src="data:image/jpeg;base64,'. $image_content .'" />';
+                     echo '</a></li>';
+                    }
+                  ?>
             </ul>
           </div>
           <div class="col-md-4">
