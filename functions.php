@@ -54,4 +54,13 @@
         header("Location: view_circle.php?action=view&id=".$circleID);
         exit;
     }
+
+    if($_POST['post_blog'] != ""){
+        $blogPost = $_POST['post_blog'];
+        
+        $sql = "INSERT INTO blogposts (userID, blogPostBody, dateTime) VALUES ('$userId', '$blogPost', now())";
+        mysql_query($sql) or die(mysql_error());
+        header("Location: profile.php");
+        exit;
+    }
 ?>
