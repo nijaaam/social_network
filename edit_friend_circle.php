@@ -22,39 +22,14 @@
         $header = $_POST['friend_circle_title'];
     }
 
-    if($_POST['add_friend_circle']){
-        // add friend circle sql
-        $friendIdsList = array();
-        foreach($_POST as $key=>$value) {
-            if($key != "header" && $key != "add_friend_circle"){
-                $friendIdsList[] = $value;
-            }
-        }
-        // Comma delimited string
-        $circleName = $_POST['header'];
-        
-        $sql = "START TRANSACTION;";
-        $res = mysql_query($sql);
-        $sql = "INSERT INTO circles(name,adminUserId) 
-            VALUES('$circleName','$userId');";
-        $res = mysql_query($sql);
-        $circleId = mysql_insert_id();
-        $sql = "INSERT INTO circlememberships(circleId, userId) VALUES ";
-        
-        $lastElement = end($friendIdsList);
-        foreach($friendIdsList as $friendId) {
-            $sql = $sql."(".$circleId.",".$friendId.")";
-            if($friendId != $lastElement)
-                $sql = $sql.",";
-        }
-        
-        $res = mysql_query($sql);
-        $sql = "COMMIT;";            
-        $res = mysql_query($sql) or die(mysql_error());
-        
-        if($res){
-            header("Location: circles.php");
-            exit;
+    $modifyCircleId = "";
+    $existingMembers = array();
+    if($_POST['modify_friend_circle']){
+        $modifyCircleId = $_POST['modify_friend_circle'];
+        $header = "Add or remove friends from circle";
+        $sql = mysql_query("SELECT userID FROM circlememberships WHERE circleID =".$modifyCircleId);  
+        while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
+            $existingMembers[] = $row[0];
         }
     }
 ?>
@@ -122,7 +97,7 @@
     </nav>
       
     <?php 
-        $sql = mysql_query(" SELECT userID, firstName, surname FROM personalinfo, relationships WHERE (userID1 = '".$_SESSION['user']."' AND userID2 = userID AND invitationAccepted = 1)") or die (mysql_error()); 
+        $sql = mysql_query(" SELECT userID, firstName, surname FROM personalinfo, relationships WHERE (userID1 = '".$userId."' AND userID2 = userID AND invitationAccepted = 1)") or die (mysql_error()); 
             $array = array();
             while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
                 $array[] = $row;
@@ -134,32 +109,52 @@
         <div class="row">
           <div class="col-md-8">
             <div class="groups">
-              <h1 class="page-header"><?php echo $header; ?>: Add friends to circle</h1>
+              <h1 class="page-header"><?php echo $header; ?></h1>
             
-              <?php 
-                  if(empty($array)){
-              ?>  
-                  <font color='red' size='4' >No friends found.</font>
-              <?php 
-                  }
-                  else{
-              ?>  
-                  <form action="edit_friend_circle.php" method="post">
-                      <?php
-                      foreach ($array as $v) {
-                          $friendId = $v[0];
-                          $firstName = $v[1];
-                          $surname = $v[2];
-                      ?>            
-                        <input type="checkbox" name="<?php echo $friendId ?>" value="<?php echo $friendId ?>">&nbsp;&nbsp;<?php echo $firstName." ".$surname ?><br>
-
-                <?php              
+                  <?php 
+                      if(empty($array)){
+                  ?>  
+                      <font color='red' size='4' >No friends found.</font>
+                  <?php 
                       }
-                  }
-                ?>        
+                      else{
+                  ?>  
+                        <form action="functions.php" method="post">
+                          <?php
+                          foreach ($array as $v) {
+                              $friendId = $v[0];
+                              $firstName = $v[1];
+                              $surname = $v[2];
+
+                              if($modifyCircleId && in_array($friendId, $existingMembers)){
+                          ?>            
+                                <input type="checkbox" checked="checked" name="<?php echo $friendId ?>" value="<?php echo $friendId ?>">&nbsp;&nbsp;<?php echo $firstName." ".$surname ?><br>
+                    <?php              
+                              }
+                              else{
+                            ?>
+                                <input type="checkbox" name="<?php echo $friendId ?>" value="<?php echo $friendId ?>">&nbsp;&nbsp;<?php echo $firstName." ".$surname ?><br>                            
+                    <?php                            
+                              }
+                          }
+                      }
+                    ?>        
                         <br>
-                        <input type="hidden" name="header" value="<?php echo $header ?>"/>
+                    <?php
+                    if($modifyCircleId){
+                        $_SESSION['existingMembers'] = $existingMembers;
+                    ?>     
+                        <input type="hidden" name="circleId" value="<?php echo $modifyCircleId ?>"/>
+                        <input type="hidden" name="modify_friend_circle" value="submit"/>                            
+                    <?php
+                    }
+                    else{
+                    ?>
+                       <input type="hidden" name="header" value="<?php echo $header ?>"/>
                         <input type="hidden" name="add_friend_circle" value="submit"/>
+                    <?php        
+                    }
+                    ?>
                         <input type="submit" id="submit" class="btn btn-info" value="Submit">
                     </form>
                 <div class="clearfix"></div>

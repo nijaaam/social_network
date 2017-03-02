@@ -111,7 +111,7 @@
                <div class="panel-body">
               
             <?php 
-                $query = "SELECT personalinfo.userID, message, timeSent, firstName, surname FROM messagecircles JOIN personalinfo ON personalinfo.userID = messagecircles.userID WHERE circleID =".$circleId." ORDER BY timeSent DESC";  
+                $query = "SELECT pi.userID, message, timeSent, firstName, surname FROM messagecircles as mc, personalinfo as pi WHERE pi.userID = mc.userID AND mc.circleID =".$circleId." ORDER BY timeSent DESC";  
                 $sql = mysql_query($query);
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
@@ -149,6 +149,25 @@
               <div class="panel-heading">
                 <h3 class="panel-title">Circle members</h3>
               </div>
+            <?php 
+                $query = "SELECT adminUserId FROM circles WHERE circleID =".$circleId;  
+                $sql = mysql_query($query);
+                $row = mysql_fetch_array($sql, MYSQL_NUM);
+                // If they are the admin of the circle
+                if($row[0] == $userId){
+            ?>
+                  <div class="panel-body">
+                    <form action="edit_friend_circle.php" method="post">
+                        <div style="text-align:center">
+                          <input type="hidden" name="modify_friend_circle" value="<?php echo $circleId ?>" />
+                          <button type="submit" class="btn btn-primary" >Modify friend circle</button>
+                        </div>
+                    </form>
+                  </div>
+            <?php
+                }
+            ?>
+                
               <div class="panel-body">
                 <?php
                 $query = "SELECT personalinfo.userID, firstName, surname FROM personalinfo JOIN circlememberships ON personalinfo.userID = circlememberships.userID WHERE circleID =".$circleId;  

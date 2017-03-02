@@ -61,18 +61,78 @@
         exit;
     }
 
-    if($request == "make_admin"){
-        $id = $_GET['id'];
-        mysql_query("INSERT INTO `admins` (`userID`) VALUES ('$id')")or die(mysql_error());
-        header("Location: view_profile.php?action=view&id=$id");
-        exit;
+    if($_POST['add_friend_circle']){
+        // add friend circle sql
+        $friendIdsList = array();
+        foreach($_POST as $key=>$value) {
+            if($key != "header" && $key != "add_friend_circle"){
+                $friendIdsList[] = $value;
+            }
+        }
+        // Comma delimited string
+        $circleName = $_POST['header'];
+        
+        $sql = "START TRANSACTION;";
+        $res = mysql_query($sql);
+        $sql = "INSERT INTO circles(name,adminUserId) 
+            VALUES('$circleName','$userId');";
+        $res = mysql_query($sql);
+        $circleId = mysql_insert_id();
+        $sql = "INSERT INTO circlememberships(circleId, userId) VALUES ";
+        
+        foreach($friendIdsList as $friendId) {
+            $sql = $sql."(".$circleId.",".$friendId."),";
+        }
+        $sql = $sql."(".$circleId.",".$userId.")";
+        
+        $res = mysql_query($sql);
+        $sql = "COMMIT;";            
+        $res = mysql_query($sql) or die(mysql_error());
+        
+        if($res){
+            header("Location: view_circle.php?action=view&id=".$circleId);
+            exit;
+        }
     }
 
-    if($request == "remove_admin"){
-        $id = $_GET['id'];
-        mysql_query("DELETE FROM `admins` WHERE `admins`.`userID` = '$id'")or die(mysql_error());
-        header("Location: view_profile.php?action=view&id=$id");
-        exit;
+    if($_POST['modify_friend_circle']){
+        $circleId = $_POST['circleId'];
+        $checkedIds;
+        foreach($_POST as $key=>$value) {
+            if($key != "circleId" && $key != "modify_friend_circle")
+                $checkedIds[] = $value;
+        }
+        
+        $existingMembers = $_SESSION['existingMembers'];
+        
+        $newMembers = array_diff($checkedIds, $existingMembers);
+
+        $removedMembers = array();
+        foreach($existingMembers as $member){
+            if(!in_array($member, $checkedIds) && $member != $userId)
+                $removedMembers[] = $member;
+        }
+        $removedMembers = implode(", ", $removedMembers);
+             
+        $sql = "START TRANSACTION;";
+        $res = mysql_query($sql);
+        $sql = "DELETE FROM circlememberships WHERE circleID = ".$circleId." AND userID IN (".$removedMembers.")";
+        $res = mysql_query($sql);
+        $sql = "INSERT INTO circlememberships(circleId, userId) VALUES ";
+        $lastElement = end($newMembers);
+        foreach($newMembers as $newMemberId) {
+            $sql = $sql."(".$circleId.",".$newMemberId.")";
+            if($newMemberId != $lastElement)
+                $sql = $sql.",";
+        }
+        $res = mysql_query($sql);
+        $sql = "COMMIT;";            
+        $res = mysql_query($sql) or die(mysql_error());
+        
+        if($res){
+            header("Location: view_circle.php?action=view&id=".$circleId);
+            exit;
+        }
     }
 
     if($_POST['send_message_circle'] != ""){
