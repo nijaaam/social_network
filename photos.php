@@ -9,26 +9,6 @@
 	$email  = $_SESSION['email'];
 	$userId = $_SESSION['user'];
 	require_once 'check_admin.php';
-    $query = "SELECT * FROM photocollection WHERE userID= '$userId'";
-    $result = mysql_query($query) or die("Error in query: $query. " . mysql_error());
-    $row = mysql_fetch_assoc($result);
-    $collectionID = $row['photoCollectionID'];
-    if (isset($_POST['upload'])) {
-        $count = count($_FILES['img']['name']);
-        for ($i = 0; $i < $count; $i++){
-            $name = $_FILES["img"]["name"][$i];
-            $content = addslashes(file_get_contents($_FILES['img']['tmp_name'][$i]));
-            $date = date("Y-m-d");
-            $string = "string";
-            $caption = "cap";
-            $query = "SELECT * FROM photocollection WHERE userID= '$userId'";
-            $result = mysql_query($query) or die("Error in query: $query. " . mysql_error());
-            $row = mysql_fetch_assoc($result);
-            $collectionID = $row['photoCollectionID'];
-            $query = "INSERT INTO photos (photoCollectionID,name,string,caption,dateUploaded,image) VALUES('$collectionID','$name','$string','$caption','$date','$content');";
-            mysql_query($query) or die("Error in query: $query. " . mysql_error());
-        }
-    }
 ?>
 
 <!DOCTYPE html>
@@ -91,121 +71,53 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="page-header">Photos</h1>
-                    <form method="POST" enctype="multipart/form-data">
-                        <input type="file" multiple="multiple" name="img[]">
-                        <input type="submit" name="upload" value="Upload">
-                    </form>
-                    <ul class="photos gallery-parent">
-                        <li>
-                            <a href="img/sample1.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample1.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <li>
-                            <a href="img/sample2.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample2.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <li>
-                            <a href="img/sample3.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample3.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <li>
-                            <a href="img/sample4.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample4.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <li>
-                            <a href="img/sample5.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample5.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <li>
-                            <a href="img/sample6.jpg" data-hover="tooltip" data-placement="top" title="image" data-gallery="mygallery" data-parent=".gallery-parent" data-title="title" data-footer="this is a footer" data-toggle="lightbox"><img src="img/sample6.jpg" class="img-thumbnail" alt=""></a>
-                        </li>
-                        <?php
-                            $userId = $_SESSION['user'];
-                            $query = "SELECT * FROM photocollection WHERE userID= '$userId'";
-                            $result = mysql_query($query) or die("Error in query: $query. " . mysql_error());
-                            $row = mysql_fetch_assoc($result);
-                            $collectionID = $row['photoCollectionID'];
-                            echo $collectionID;
-		                    $query = "SELECT * FROM photos where photoCollectionID = '$collectionID';";
-		                    $res = mysql_query($query) or die("Error in query: $query. ".mysql_error());
-		                    while($row=mysql_fetch_array($res)){
-                                $name = $row["name"];
-                                $content = base64_encode($row["image"]);
-                                $image = "data:image/jpeg;base64,". $content;
-                                echo "<li><a href='$image' data-hover='tooltip' data-placement='top' title='image' data-gallery='mygallery' data-parent='.gallery-parent' data-title='title' data-footer='this is a footer' data-toggle='lightbox'>"; 
-                                echo '<img src="data:image/jpeg;base64,'. $content .'" alt = " "/>';
-                                echo '</a></li>';
-                            }
-		                ?>
-                    </ul>
+                  <div class="groups">
+                    <h1 class="page-header">Photo Collections</h1>
+                <?php 
+                    $query = "SELECT photoCollectionID, name, whoCanSee FROM photocollections";
+                    $sql = mysql_query($query) or die (mysql_error());
+                    while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                        $photoCollectionId = $row[0];
+                        $name = $row[1];
+                        $whoCanSee = $row[2];
+                ?>
+                          <div class="group-item">
+                                <img src="img/group.png" alt="">
+                                <h3>&nbsp;&nbsp;&nbsp;
+                                    <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
+                                </h3>
+                          </div>
+                          <div class="clearfix"></div>
+                <?php
+                    }
+                ?>
+                  </div>
                 </div>
                 <div class="col-md-4">
+                    <br><br><br><br>
                     <div class="panel panel-default friends">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">My Friends</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html" class="thumbnail"><img src="img/user.png" alt=""></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                            <div style="text-align:center">
-                                <a class="btn btn-primary" href="#">View All Friends</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default groups">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Latest Groups</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="group-item">
-                                <img src="img/group.png" alt="">
-                                <h4><a href="#" class="">Sample Group One</a></h4>
-                                <p>This is a paragraph of intro text, or whatever I want to call it.</p>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="group-item">
-                                <img src="img/group.png" alt="">
-                                <h4><a href="#" class="">Sample Group Two</a></h4>
-                                <p>This is a paragraph of intro text, or whatever I want to call it.</p>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="group-item">
-                                <img src="img/group.png" alt="">
-                                <h4><a href="#" class="">Sample Group Three</a></h4>
-                                <p>This is a paragraph of intro text, or whatever I want to call it.</p>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div style="text-align:center">
-                                <a class="btn btn-primary" href="#">View All Groups</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Create new photo collection</h3>
+                      </div>
+                      <div class="panel-body">
+                        <ul>
+                            <li>         
+                                <form name="new_photo_collection" method="POST" action="new_photo_collection.php" onsubmit="return validateInput()" autocomplete="off">
+                                    <div class="form-group" style="max-width:300px">
+                                        <div class="input-group col-md-12">
+                                            <input type="text" name="photo_collection_title" class="form-control input-md" placeholder="Enter photo collection title" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info btn-md" type="submit">
+                                                    <i class="glyphicon glyphicon-edit"></i>
+                                                </button>
+                                        </div>
+                                    </div>        
+                                </form>
+                            </li>
+                        </ul>
+                      </div>
+            </div>            
+        </div>             
             </div>
         </div>
     </section>
@@ -234,3 +146,13 @@
 </body>
 
 </html>
+<script>
+function validateInput(){
+    var a = document.forms["new_photo_collection"]["photo_collection_title"].value;
+    
+    if (a == ""){
+        alert("Photo collection must be given a name.");
+        return false;
+    }
+}
+</script>

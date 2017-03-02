@@ -34,14 +34,22 @@
 
         if($option == "profileView"){
             mysql_query("UPDATE securitysettings SET whoCanSeeProfile = '$value' WHERE (userID = '$userId')")or die(mysql_error());
+            header("Location: profile.php");
+            exit;
         }
 
         if($option == "blogView"){
             mysql_query("UPDATE securitysettings SET whoCanSeeBlog = '$value' WHERE (userID = '$userId')")or die(mysql_error());
+            header("Location: profile.php");
+            exit;
         }
-
-        header("Location: profile.php");
-        exit;
+        
+        if($option == "photoCollection"){
+            $id = $_GET['id'];
+            mysql_query("UPDATE photoCollections SET whoCanSee = '$value' WHERE (photoCollectionID = '$id')")or die(mysql_error());
+            header("Location: view_photo_collection.php?action=view&id=".$id);
+            exit;
+        }
     }
 
     if($request == "change_privacy_admin"){
@@ -152,5 +160,54 @@
         mysql_query($sql) or die(mysql_error());
         header("Location: profile.php");
         exit;
+    }
+
+    if($_POST['new_photo_collection'] != ""){
+        if (isset($_POST['upload'])) {
+            $count = count($_FILES['img']['name']);
+            $sql = "START TRANSACTION;";
+            $res = mysql_query($sql);
+            $sql = "INSERT INTO photoCollections(userID) VALUES('$userId');";
+            $res = mysql_query($sql);
+            $photoCollectionId = mysql_insert_id();
+
+            for ($i = 0; $i < $count; $i++){
+                $name = $_FILES["img"]["name"][$i];
+                $imageBlob = addslashes(file_get_contents($_FILES['img']['tmp_name'][$i]));
+                $caption = "caption";
+                $sql = "INSERT INTO photos (photoCollectionID,name,caption,image, dateUploaded) VALUES ('$photoCollectionId', '$name', '$caption', '$imageBlob', now());";
+                $res = mysql_query($sql) or die(mysql_error());
+            }
+                        
+            $sql = "COMMIT;";            
+            $res = mysql_query($sql) or die(mysql_error());
+            
+            header("Location: photos.php");
+            exit;
+        }
+    }
+
+    if($_POST['add_photo_collection'] != ""){
+        if (isset($_POST['upload'])) {
+            $photoCollectionId = $_POST['add_photo_collection'];
+
+            $count = count($_FILES['img']['name']);
+            $sql = "START TRANSACTION;";
+            $res = mysql_query($sql);
+
+            for ($i = 0; $i < $count; $i++){
+                $name = $_FILES["img"]["name"][$i];
+                $imageBlob = addslashes(file_get_contents($_FILES['img']['tmp_name'][$i]));
+                $caption = "caption";
+                $sql = "INSERT INTO photos (photoCollectionID,name,caption,image, dateUploaded) VALUES ('$photoCollectionId', '$name', '$caption', '$imageBlob', now());";
+                $res = mysql_query($sql) or die(mysql_error());
+            }
+                        
+            $sql = "COMMIT;";            
+            $res = mysql_query($sql) or die(mysql_error());
+            
+            header("Location: view_photo_collection.php?action=view&id=".$photoCollectionId);
+            exit;
+        }
     }
 ?>
