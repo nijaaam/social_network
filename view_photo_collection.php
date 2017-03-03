@@ -96,9 +96,15 @@
                                 $name = $row["name"];
                                 $content = base64_encode($row["image"]);
                                 $image = "data:image/jpeg;base64,". $content;
-                                echo "<li><a href='$image' data-hover='tooltip' data-placement='top' title='image' data-gallery='mygallery' data-parent='.gallery-parent' data-title='title' data-footer='this is a footer' data-toggle='lightbox'>"; 
-                                echo '<img src="data:image/jpeg;base64,'. $content .'" alt = " "/>';
-                                echo '</a></li>';
+                                $photoId = $row['photoID'];
+                            ?>
+                                <li>
+                                    <form method="post" action="view_photo.php">
+                                        <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>
+                                        <input style="max-width:150px" type="image" name="view_photo" value="<?php echo $image ?>" src="data:image/jpeg;base64,<?php echo $content?>" value="Submit" />
+                                    </form>
+                                </li>
+                        <?php
                             }
 		                ?>
                     </ul>

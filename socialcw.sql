@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 02, 2017 at 11:50 PM
+-- Generation Time: Mar 03, 2017 at 02:59 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -241,12 +241,27 @@ INSERT INTO `photocollections` (`photoCollectionID`, `userID`, `name`, `whoCanSe
 --
 
 CREATE TABLE IF NOT EXISTS `photocomments` (
-  `commentID` int(11) NOT NULL,
+  `commentID` int(11) NOT NULL AUTO_INCREMENT,
   `photoID` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `comment` varchar(240) NOT NULL,
-  `dateTime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `dateTime` datetime NOT NULL,
+  PRIMARY KEY (`commentID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `photocomments`
+--
+
+INSERT INTO `photocomments` (`commentID`, `photoID`, `userID`, `comment`, `dateTime`) VALUES
+(1, 22, 24, 'Hello', '2017-03-03 01:30:08'),
+(3, 22, 24, 'asdasd', '2017-03-03 01:36:50'),
+(5, 22, 24, 'ashdkasjd', '2017-03-03 01:39:10'),
+(6, 22, 24, 'asfkjsdf', '2017-03-03 01:41:50'),
+(7, 22, 24, 'keep trying lad', '2017-03-03 01:45:27'),
+(8, 23, 26, 'hello', '2017-03-03 01:53:36'),
+(9, 23, 24, 'its fine', '2017-03-03 01:57:22'),
+(10, 21, 24, 'Hello', '2017-03-03 01:58:07');
 
 -- --------------------------------------------------------
 

@@ -162,6 +162,16 @@
         exit;
     }
 
+    if($_POST['post_photo_comment'] != ""){
+        $photoComment = $_POST['post_photo_comment'];
+        $photoId = $_POST['photoId'];
+
+        $sql = "INSERT INTO photocomments (photoID, userID, comment, dateTime) VALUES ('$photoId', '$userId', '$photoComment', now())";
+        mysql_query($sql) or die(mysql_error());
+        header("Location: view_photo.php");
+        exit;
+    }
+
     if($_POST['new_photo_collection'] != ""){
         if (isset($_POST['upload'])) {
             $count = count($_FILES['img']['name']);
