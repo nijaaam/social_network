@@ -102,13 +102,15 @@
                     <li><strong>DOB: </strong><?php                                     
                                     $myDateTime = DateTime::createFromFormat('Y-m-d', $userRow['birthday']);
                                     echo $myDateTime->format('d M Y'); ?></li>
-                      
+
                     <li>
-                        <br>
+                        <button type="submit" name="edit" class="btn btn-default" style="margin-bottom: 10px;">
+                            Edit Details...</button></li>
+                    <li>
                         <form method="POST" action='export.php'>
-<button type="submit" name="export" class="btn btn-default">Export</button>
-</form>  
-                    </li>    
+                            <button type="submit" name="export" class="btn btn-default">Export XML</button>
+                        </form>
+                    </li>
                   </ul>
                 </div>
               </div><br><br>
