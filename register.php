@@ -2,7 +2,7 @@
 	ob_start();
 	session_start();
 	if( isset($_SESSION['user'])!="" ){
-		header("Location: home.php");
+		header("Location: profile.php");
 	}
 	include_once 'dbconnect.php';
 
@@ -41,7 +41,9 @@
         
         $birthday = trim($_POST['birthday']);
 		$birthday = strip_tags($birthday);
-		$birthday = htmlspecialchars($birthday);        
+		$birthday = htmlspecialchars($birthday);  
+
+		$securityQuestion = trim($_POST['securityQuestion']);      
         
 		$securityAnswer = trim($_POST['securityAnswer']);
 		$securityAnswer = strip_tags($securityAnswer);
@@ -72,13 +74,7 @@
         
        if (empty($gender)) {
 			$error = true;
-			$genderError = "Please enter your surname.";
-		} else if (strlen($gender) < 2) {
-			$error = true;
-			$genderError = "Surname must have atleat 2 characters.";
-		} else if (!preg_match("/^[a-zA-Z ]+$/",$gender)) {
-			$error = true;
-			$genderError = "Must contain alphabets and space.";
+			$genderError = "Please select a gender.";
 		} 
         
         if (empty($birthday)) {
@@ -86,7 +82,7 @@
 			$birthdayError = "Please enter your birthday.";
 		} else if (strlen($birthday) < 2) {
 			$error = true;
-			$birthdayError = "Birthday must be the correct format.";
+			$birthdayError = "Birthday must be the correct format (yyyy-mm-dd).";
 		} 
         
         if (empty($city)) {
@@ -109,6 +105,11 @@
 		} else if (!preg_match("/^[a-zA-Z ]+$/",$country)) {
 			$error = true;
 			$countryError = "Must contain alphabets and space.";
+		} 
+
+		if (empty($securityQuestion)) {
+			$error = true;
+			$securityQuestionError = "Please select a security question.";
 		} 
         
 		if (empty($securityAnswer)) {
@@ -152,8 +153,8 @@
 		if( !$error ) {
 			$query = "START TRANSACTION;";
             $res = mysql_query($query);
-			$query = "INSERT INTO users(email,password,securityAnswer) 
-                VALUES('$email','$password','$securityAnswer');";
+			$query = "INSERT INTO users(email,password,securityQuestion,securityAnswer) 
+                VALUES('$email','$password','$securityQuestion', '$securityAnswer');";
             $res = mysql_query($query);
             $query = "INSERT INTO personalinfo(userID, firstName, surname, gender, city, country, birthday) VALUES((SELECT userID from users WHERE email = '$email'),'$firstName','$surname','$gender','$city','$country','$birthday');";
             $res = mysql_query($query);
@@ -178,6 +179,10 @@
 		}
 		
 		
+	}
+	else{
+		$gender='';
+		$securityQuestion='';
 	}
 ?>
 <!DOCTYPE html>
@@ -237,7 +242,11 @@
             <div class="form-group">
             	<div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-            	<input type="text" name="gender" class="form-control" placeholder="Gender" maxlength="50" value="<?php echo $gender ?>" />
+            	<select name="gender", class= "form-control">
+            		<option value="" <?php if($gender == ''){echo("selected");}?> disabled hidden>Gender</option>
+ 					<option <?php if($gender == 'Male'){echo("selected");}?> value="Male">Male</option>
+  					<option <?php if($gender == 'Female'){echo("selected");}?> value="Female">Female</option>
+				</select>
                 </div>
                 <span class="text-danger"><?php echo $genderError; ?></span>
             </div>
@@ -269,7 +278,7 @@
             <div class="form-group">
             	<div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon"></span></span>
-            	<input type="date" name="birthday" class="form-control" placeholder="Birthday" maxlength="50" value="<?php echo $birthday ?>" />
+            	<input type="date" name="birthday" class="form-control" placeholder="Birthday (yyyy-mm-dd)" maxlength="50" value="<?php echo $birthday ?>" />
                 </div>
                 <span class="text-danger"><?php echo $birthdayError; ?></span>
             </div>
@@ -290,6 +299,19 @@
                 <span class="text-danger"><?php echo $countryError; ?></span>
             </div>
             
+            <div class="form-group">
+            	<div class="input-group">
+                <span class="input-group-addon"></span>
+            	<select name="securityQuestion", class= "form-control">
+            		<option value="" <?php if($securityQuestion == ''){echo("selected");}?> disabled hidden>Select a security question</option>
+ 					<option <?php if($securityQuestion == 'primary school'){echo("selected");}?> value="primary school">What was the name of your elementary / primary school?</option>
+  					<option <?php if($securityQuestion == 'pets name'){echo("selected");}?> value="pets name">What was the name of your first pet?</option>
+  					<option <?php if($securityQuestion == 'favourite teacher'){echo("selected");}?> value="favourite teacher">What was the name of your favourite teacher?</option>
+				</select>
+                </div>
+                <span class="text-danger"><?php echo $securityQuestionError; ?></span>
+            </div>
+
             <div class="form-group">
             	<div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon"></span></span>

@@ -6,7 +6,7 @@
 	
 	define('DBHOST', 'localhost');
 	define('DBUSER', 'root');
-	define('DBPASS', '123');
+	define('DBPASS', 'H1utsa3K');
 	define('DBNAME', 'socialcw');
 	
 	$conn = mysql_connect(DBHOST,DBUSER,DBPASS);
@@ -23,3 +23,4 @@
 	if ( !$dbcon ) {
 		die("Database Connection failed : " . mysql_error());
 	}
+?>
