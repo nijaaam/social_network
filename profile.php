@@ -131,9 +131,10 @@
                   <div class="panel panel-default post">
                     <div class="panel-body">
               
-                    <?php 
-                        $query = "SELECT blogPostBody, dateTime FROM blogPosts WHERE userID =".$userId." ORDER BY dateTime DESC";  
-                        $sql = mysql_query($query);
+                    <?php
+                        $userId = $_SESSION['user'];
+                        $query = "SELECT blogPostBody, dateTime FROM blogposts WHERE userID ='$userId' ORDER BY dateTime DESC";  
+                        $sql = mysql_query($query) or die('sfa' . mysql_error());
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                             $postBody = $row[0];
                             $timeSent = $row[1];

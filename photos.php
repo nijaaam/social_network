@@ -73,14 +73,14 @@
                 <div class="col-md-8">
                   <div class="groups">
                     <h1 class="page-header">Photo Collections</h1>
-                <?php 
-                    $query = "SELECT photoCollectionID, name, whoCanSee FROM photocollections";
-                    $sql = mysql_query($query) or die (mysql_error());
-                    while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
-                        $photoCollectionId = $row[0];
-                        $name = $row[1];
-                        $whoCanSee = $row[2];
-                ?>
+                        <?php 
+                            $query = "SELECT photoCollectionID, name, whoCanSee FROM photocollections";
+                            $sql = mysql_query($query) or die (mysql_error());
+                            while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                                $photoCollectionId = $row[0];
+                                $name = $row[1];
+                                $whoCanSee = $row[2];
+                        ?>
                           <div class="group-item">
                                 <img src="img/group.png" alt="">
                                 <h3>&nbsp;&nbsp;&nbsp;
