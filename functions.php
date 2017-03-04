@@ -273,4 +273,25 @@ if($_POST['delete_post'] != ""){
     header("Location: profile.php");
     exit;
 }
+
+if($_POST['delete_collection'] != ""){
+    $collectionId = $_POST['delete_collection'];
+
+    $sql = "START TRANSACTION;";
+    $res = mysql_query($sql);
+    $sql = "DELETE FROM photolikes WHERE photoID IN (SELECT photoID FROM photos WHERE photoCollectionID = '$collectionId')";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "DELETE FROM photocomments WHERE photoID IN (SELECT photoID FROM photos WHERE photoCollectionID = '$collectionId')";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "DELETE FROM photos WHERE photoCollectionID = '$collectionId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "DELETE FROM photocollections WHERE photoCollectionID = '$collectionId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "COMMIT";
+    $res = mysql_query($sql);
+
+    header("Location: photos.php");
+    exit;
+}
+
 ?>
