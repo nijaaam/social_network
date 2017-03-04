@@ -3,7 +3,7 @@
     session_start();
     require_once 'dbconnect.php';
 
-	function search_members($search_term, $friendId){        
+	function search_members($search_term, $friendId, $filterFriendsOfFriends){  
             $userId = $_SESSION['user'];
 
 			$friendRequestsSql = mysql_query("SELECT * FROM `relationships` WHERE (`userID1`= '".$userId."')") or die (mysql_error()); 
@@ -11,13 +11,21 @@
             while ($row = mysql_fetch_array($friendRequestsSql, MYSQL_NUM)) {
                 $array[] = $row;
             }
-
+        
             $query = "";
+            // Searched from search users text field
             if($friendId == 0){
-                $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
+                if($filterFriendsOfFriends != "on"){
+                    // search all users with search query
+                    $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
+                }
+                else{
+                    // friends of friends with search query.
+                    $query = "SELECT pi.* FROM personalinfo pi, relationships F, relationships F2 WHERE F.userID1 = F2.userID2 AND F2.userID1 NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND F.userID2 = '$userId' AND F2.userID1 != '$userId' AND F2.userID1 = pi.userID  AND (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') GROUP BY F2.userID1";
+                }
             }
             else if($search_term == 0){
-                // friends of friends query.
+                // friends of friends query from clicking on view friends.
                 // $query = $query."SELECT f1.userID2 FROM relationships AS f1 JOIN relationships AS f2 USING (userID2) WHERE f1.userID1 = '".$userId."' AND f2.userID1 = '".$mutualUserId."' AND f1.invitationAccepted = '1' AND f2.invitationAccepted = '1' )";
                 $query = "SELECT * FROM `personalinfo` WHERE `userID` != '".$userId."' AND `userID` IN (";
                 $query = $query."SELECT userID2 FROM relationships WHERE userID1 = '".$friendId."' AND invitationAccepted = '1' )";
@@ -27,7 +35,7 @@
                 $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
             }
         
-			       $sql = mysql_query($query) or die (mysql_error());
+            $sql = mysql_query($query) or die (mysql_error());
             $num_of_row   = mysql_num_rows($sql);
             if ($num_of_row > 0 ){
                  while($row    = mysql_fetch_array($sql)){ 
