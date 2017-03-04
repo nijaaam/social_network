@@ -62,6 +62,16 @@ if (isset($_POST['export'])) {
     $xml .= get_xml2($query, "photocollections","photocollection");
     $query = "SELECT * from photos where photoCollectionID IN (select photoCollectionID from photocollections where userID = $userId);";
     $xml .= get_xml2($query, "photos","photo");
+    $query = "SELECT * from photolikes where userID = $userId;";
+    $xml .= get_xml2($query, "photolikes","likes");
+    $query = "SELECT * from photocomments where userID = $userId;";
+    $xml .= get_xml2($query, "photocomments","comments");
+    $query = "SELECT * from circles where adminUserID = $userId;";
+    $xml .= get_xml2($query, "circles_admin","circle");
+    $query = "SELECT * from circlememberships where userID = $userId;";
+    $xml .= get_xml2($query, "circles_member","circle");
+    $query = "SELECT * from messagecircles where userID = $userId;";
+    $xml .= get_xml2($query, "circles_messages","messages");
     $xml .= "</data>\n";
     
     header("Content-Type: text/xml");
