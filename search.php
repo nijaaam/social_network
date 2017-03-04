@@ -115,6 +115,17 @@ function array_key_unique($arr, $key) {
                         </div>
                     </div>        
                 </form>
+                <form name="searchFriendBlogs" method="POST" action="search.php" autocomplete="off">
+                    <div class="form-group" style="max-width:300px">
+                        <div class="input-group col-md-12">
+                            <input type="text" name="search_friend_blogs" class="form-control input-md" placeholder="Search friend blogs" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn-md" type="submit">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                        </div>
+                    </div>        
+                </form>
             </li>
             </ul>
       </div>
@@ -132,11 +143,17 @@ function array_key_unique($arr, $key) {
                         // Search by search query
                         $search_term = $_POST['search_friends'];
                         search_members($search_term, 0);
-                    }else if(isset($_GET['search_friends_of_friends'])){
+                    }
+                    else if(isset($_GET['search_friends_of_friends'])){
                         // Search by friends of friends
                         $id = $_GET['search_friends_of_friends'];
                         search_members(0, $id);
-                    }else{
+                    }
+                    else if(isset($_POST['search_friend_blogs'])){
+                        $search_term = $_POST['search_friend_blogs'];
+                        search_friend_blogs($search_term);         
+                    }
+                    else{
                         // Default search on search page. "Suggested friends".
                         // This is where you put your collaborative filtering method of finding friends.
                         search_members(-1,-1);
@@ -150,71 +167,7 @@ function array_key_unique($arr, $key) {
         </div>
       </div>
     </section>
-    <section>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="panel panel-default post">
-                <div class="panel-body">
-                    <?php
-                        $userId = $_SESSION['user'];
-                        $friends = array();
-                        $userId = $_SESSION['user'];
-                        $query1 = "SELECT userID2 FROM relationships WHERE userID1 = $userId and invitationAccepted = 1";
-                        $query2 = "SELECT userID1 FROM relationships WHERE userID2 = $userId and invitationAccepted = 1";
-                        $result1 = mysql_query($query1) or die(mysql_error());
-                        $result2 = mysql_query($query2) or die(mysql_error());
-                        while ($row = mysql_fetch_array($result1)){
-                            array_push($friends, $row['userID2']);
-                        }
-                        while ($row = mysql_fetch_array($result2)){
-                            array_push($friends, $row['userID1']);
-                        }
-                        $results = array_unique($friends);
-                        $search_term = $_POST['search_friends'];
-                        $posts = array();
-                    
-                        foreach ($results as $val) {
-                            $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%' AND userId = $val") or die(mysql_error());
-                            #echo " sdad". mysql_num_rows($result);
-                            while($row = mysql_fetch_array($result)){
-                                array_push($posts,$row);
-                            }
-                        }
-                        $posts = array_key_unique($posts,'dateTime');
-                        foreach($posts as $post){
-                            $postBody = $post['blogPostBody'];
-                            $timeSent = $post['dateTime'];
-                            $userId = $post['userID'];
-                            $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
-                            $timeSent = $myDateTime->format('d/m/Y H:m');
-                            $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $userId");
-                            $fullName = mysql_fetch_array($name)[0];
-                        ?> 
-                         <div class="row">
-                           <div class="col-sm-2">
-                             <a href="view_profile.php?action=view&id=<?php echo $userId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
-                           </div>
-                           <div class="col-sm-10">
-                             <div class="bubble">
-                               <div class="pointer">
-                                 <p><?php echo $postBody ?></p>
-                               </div>
-                               <div class="pointer-border"></div>
-                               <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
-                             </div>
-                           </div>
-                         </div>             
-                    <?php  
-                        }
-                    ?>  
-                  </div>
-                    
-                </div>
-          </div>
-        </div>
-      </div>
-    </section>
+  
     <footer>
       <div class="container">
         <p>Group 3 Social Network; Osman Ahmed, Nijamudeen Abubacker, Shivam Dhall, Bagus Maulana</p>

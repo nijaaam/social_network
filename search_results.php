@@ -85,8 +85,52 @@
               echo "<font color='red' size='4' >No result found!</font>";
             }
 	
-				
-				
+    }	
 
-}	
+	function search_friend_blogs($search_term){      
+            $userId = $_SESSION['user'];
+            $friends = array();
+            if($search_term == "")
+                return;
+            $query1 = "SELECT userID2 FROM relationships WHERE userID1 = $userId and invitationAccepted = 1";
+            $result1 = mysql_query($query1) or die(mysql_error());
+            while ($row = mysql_fetch_array($result1)){
+                array_push($friends, $row['userID2']);
+            }
+            $result = array_unique($friends);
+            $posts = array();
+            foreach ($friends as $val) {
+                $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%'") or die(mysql_error());
+                while($row = mysql_fetch_array($result)){
+                    array_push($posts,$row);
+                }
+            }
+            $posts = array_key_unique($posts,'dateTime');
+            foreach($posts as $post){
+                $postBody = $post['blogPostBody'];
+                $timeSent = $post['dateTime'];
+                $userId = $post['userID'];
+                $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
+                $timeSent = $myDateTime->format('d/m/Y H:m');
+                $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $userId");
+                $fullName = mysql_fetch_array($name)[0];
+            ?> 
+             <div class="row">
+               <div class="col-sm-2">
+                 <a href="view_profile.php?action=view&id=<?php echo $userId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
+               </div>
+               <div class="col-sm-10">
+                 <div class="bubble">
+                   <div class="pointer">
+                     <p><?php echo $postBody ?></p>
+                   </div>
+                   <div class="pointer-border"></div>
+                   <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
+                 </div>
+               </div>
+             </div>             
+        <?php  
+            }
+
+    }
 ?>
