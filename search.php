@@ -173,6 +173,7 @@ function array_key_unique($arr, $key) {
                         $results = array_unique($friends);
                         $search_term = $_POST['search_friends'];
                         $posts = array();
+                    
                         foreach ($results as $val) {
                             $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%' AND userId = $val") or die(mysql_error());
                             #echo " sdad". mysql_num_rows($result);
@@ -181,7 +182,6 @@ function array_key_unique($arr, $key) {
                             }
                         }
                         $posts = array_key_unique($posts,'dateTime');
-                        #print_r($posts);
                         foreach($posts as $post){
                             $postBody = $post['blogPostBody'];
                             $timeSent = $post['dateTime'];
