@@ -3,8 +3,8 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
-	include("search_results.php");
-    function array_key_unique($arr, $key) {
+  include("search_results.php");
+function array_key_unique($arr, $key) {
     $uniquekeys = array();
     $output     = array();
     foreach ($arr as $item) {
@@ -126,6 +126,7 @@
           <div class="col-md-8">
             <div class="members">
               <h1 class="page-header"><?php echo $header ?></h1>
+                
                 <?php
                     if(isset($_POST['search_friends'])){
                         // Search by search query
@@ -141,9 +142,11 @@
                         search_members(-1,-1);
                     }
                 ?>
+
               </div>
             </div>
           </div>
+           
         </div>
       </div>
     </section>
@@ -167,16 +170,18 @@
                         while ($row = mysql_fetch_array($result2)){
                             array_push($friends, $row['userID1']);
                         }
-                        $result = array_unique($friends);
+                        $results = array_unique($friends);
                         $search_term = $_POST['search_friends'];
                         $posts = array();
-                        foreach ($friends as $val) {
-                            $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%'") or die(mysql_error());
+                        foreach ($results as $val) {
+                            $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%' AND userId = $val") or die(mysql_error());
+                            #echo " sdad". mysql_num_rows($result);
                             while($row = mysql_fetch_array($result)){
                                 array_push($posts,$row);
                             }
                         }
                         $posts = array_key_unique($posts,'dateTime');
+                        #print_r($posts);
                         foreach($posts as $post){
                             $postBody = $post['blogPostBody'];
                             $timeSent = $post['dateTime'];

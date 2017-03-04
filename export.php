@@ -19,6 +19,27 @@
       $xml .= "</$name>\n";
       return $xml;
     }
+
+    function get_xml2($query,$name,$name2){
+      $result = mysql_query($query) or die ("Error in query: $query. ".mysql_error()); 
+      $xml .= "<$name>\n";
+      $numberfields = mysql_num_fields($result);
+      echo mysql_num_rows($result);
+      while($arr = mysql_fetch_array($result)){
+        $xml .= "\t<$name2>";
+          for ($i=0; $i<$numberfields ; $i++ ) {
+            $var = mysql_field_name($result, $i);
+            $xml .= "\t<$var>";
+            $xml .= $arr[$i];
+            $xml .= "</$var>\n";
+      }
+        $xml .= "</$name2>\n";
+      }
+      
+      $xml .= "</$name>\n";
+      return $xml;
+    }
+
   if (isset($_POST['export'])) {
       $userId   = $_SESSION['user'];
       $query = "SELECT * FROM personalinfo WHERE personalinfo.userID='$userId'";
@@ -27,10 +48,10 @@
       $xml .= get_xml($query,"user");
       $query = "SELECT * FROM securitysettings WHERE userID='$userId'";
       $xml .= get_xml($query,"security");
-      $query = "SELECT * FROM relationships WHERE userID1='$userId' OR userID2= '$userId' ";
-      $xml .= get_xml($query,"friends");
-      $query = "SELECT * FROM blogposts WHERE blogID = (SELECT blogID FROM blogs WHERE blogs.userID='$userId')";
-      $xml .= get_xml($query,"blog");
+      $query = "SELECT * FROM relationships WHERE  invitationAccepted = 1 and userID1 = $userId OR userID2 = $userId;";
+      $xml .= get_xml2($query,"friends","friend");
+      $query = "SELECT * FROM blogposts WHERE userID = $userId";
+      $xml .= get_xml2($query,"blogs","post");
       $xml .= "</data>\n";
 
      header("Content-Type: text/xml");
