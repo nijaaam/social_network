@@ -101,6 +101,7 @@
                                 <li>
                                     <form method="post" action="view_photo.php">
                                         <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>
+                                        <input type="hidden" name="photoAdminId" value="<?php echo $photoCollectionAdminId ?>"/>
                                         <input style="max-width:150px" type="image" name="view_photo" value="<?php echo $image ?>" src="data:image/jpeg;base64,<?php echo $content?>" value="Submit" />
                                     </form>
                                 </li>

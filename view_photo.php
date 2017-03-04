@@ -14,18 +14,26 @@
     $userId = $_SESSION['user'];
     $image = "";
     $photoId = "";
+    $photoCollectionAdminId = "";
     if($_POST['view_photo'] != ""){
         $image = $_POST['view_photo'];
         $photoId = $_POST['photoId'];
+        $photoCollectionAdminId = $_POST['photoAdminId'];
     }
     else if($image == "" && $_SESSION['image'] != ""){
         $image = $_SESSION['image'];
         $photoId = $_SESSION['photoId'];
+        $photoCollectionAdminId = $_POST['photoAdminId'];
     }
     else{
         header("Location: photos.php");
         exit;
     }
+
+    $sql = mysql_query("SELECT * FROM relationships WHERE invitationAccepted = 1 AND userID1 = ".$userId." AND userID2 =".$photoCollectionAdminId);
+    $row = mysql_fetch_array($sql, MYSQL_NUM);
+    $friend = $row[0];
+    $canComment = $friend || $userId == $photoCollectionAdminId;
 
     $sql = mysql_query("SELECT * FROM photolikes WHERE photoID =".$photoId." AND userID =".$userId);
     $row = mysql_fetch_array($sql, MYSQL_NUM);
@@ -143,6 +151,9 @@
                     <div class="panel-heading">
                       <h3 class="panel-title">Comments</h3>
                     </div>
+                  <?php 
+                    if($canComment){
+                    ?>
                     <div class="panel-body">
                         <form name="blogPhotoCommentForm" action="functions.php" method="post" onsubmit="return validateInput()">
                           <div class="form-group">
@@ -156,6 +167,9 @@
                           <button type="submit" class="btn btn-default">Post</button>
                         </form>
                     </div>
+                    <?php
+                    }
+                    ?>
                   </div>
                     
                   <div class="panel panel-default post">
