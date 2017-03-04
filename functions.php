@@ -236,4 +236,13 @@
         header("Location: view_photo.php");
         exit;
     }
+
+    if($_POST['delete_photo_comment'] != ""){
+        $commentId = $_POST['delete_photo_comment'];
+        $sql = "DELETE FROM photocomments WHERE commentId = '$commentId'";
+        
+        $res = mysql_query($sql) or die(mysql_error());
+        header("Location: view_photo.php");
+        exit;
+    }
 ?>

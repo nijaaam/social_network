@@ -3,6 +3,7 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
+    require_once 'check_admin.php';
 
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -23,17 +24,18 @@
     else if($image == "" && $_SESSION['image'] != ""){
         $image = $_SESSION['image'];
         $photoId = $_SESSION['photoId'];
-        $photoCollectionAdminId = $_POST['photoAdminId'];
+        $photoCollectionAdminId = $_SESSION['photoAdminId'];
     }
     else{
         header("Location: photos.php");
         exit;
     }
-
+    
     $sql = mysql_query("SELECT * FROM relationships WHERE invitationAccepted = 1 AND userID1 = ".$userId." AND userID2 =".$photoCollectionAdminId);
     $row = mysql_fetch_array($sql, MYSQL_NUM);
     $friend = $row[0];
     $canComment = $friend || $userId == $photoCollectionAdminId;
+    $canDeleteComment = ($userId == $photoCollectionAdminId) || $isAdmin;
 
     $sql = mysql_query("SELECT * FROM photolikes WHERE photoID =".$photoId." AND userID =".$userId);
     $row = mysql_fetch_array($sql, MYSQL_NUM);
@@ -54,8 +56,6 @@
         $likeCountHeader = $likeNo." like";
     else
         $likeCountHeader = $likeNo." likes";
-
-    require_once 'check_admin.php';
 ?>
 
 <!DOCTYPE html>
@@ -162,6 +162,7 @@
                             <?php 
                                 $_SESSION['image'] = $image;
                                 $_SESSION['photoId'] = $photoId;
+                                $_SESSION['photoAdminId'] = $photoCollectionAdminId;
                               ?>
                           </div>
                           <button type="submit" class="btn btn-default">Post</button>
@@ -176,7 +177,7 @@
                     <div class="panel-body">
               
                     <?php 
-                        $query = "SELECT comment, dateTime, u.userID, firstName, surname FROM photocomments as p, users as u, personalinfo as pi WHERE photoID ='".$photoId."' AND u.userID = p.userID AND p.userID = pi.userID ORDER BY dateTime ASC";  
+                        $query = "SELECT comment, dateTime, u.userID, firstName, surname, commentID FROM photocomments as p, users as u, personalinfo as pi WHERE photoID ='".$photoId."' AND u.userID = p.userID AND p.userID = pi.userID ORDER BY dateTime ASC";  
                         $sql = mysql_query($query);
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                             $comment = $row[0];
@@ -185,6 +186,7 @@
                             $fullName = $row[3]." ".$row[4];
                             $myDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $timeSent);
                             $timeSent = $myDateTime->format('d/m/Y H:i:s');
+                            $commentID = $row[5];
                     ?> 
                          <div class="row">
                            <div class="col-sm-2">
@@ -195,6 +197,18 @@
                                <div class="pointer">
                                  <p><?php echo $comment ?></p>
                                </div>
+                                <?php 
+                                if($canDeleteComment || $commentUserId == $userId){
+                                 ?> 
+                                 <form name="deleteCommentForm" action="functions.php" method="post">
+                                  <div class="form-group">
+                                    <input type="hidden" name="delete_photo_comment" value="<?php echo $commentID ?>"/>
+                                    <button style="float:left" type="submit" class="btn btn-danger">Delete</button>
+                                  </div>
+                                </form>
+                                 <?php
+                                }
+                                 ?>
                                <div class="pointer-border"></div>
                                <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
                              </div>
