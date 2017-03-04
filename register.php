@@ -201,7 +201,7 @@ else{
 					<div class="form-group">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon"></span></span>
-							<input type="text" name="securityAnswer" class="form-control" placeholder="Enter a memorable word (security question)" maxlength="50" value="<?php echo $securityAnswer; ?>" />
+							<input type="text" name="securityAnswer" class="form-control" placeholder="Answer" maxlength="50" value="<?php echo $securityAnswer; ?>" />
 						</div>
 						<span class="text-danger"><?php echo $securityAnswerError; ?></span>
 					</div>
