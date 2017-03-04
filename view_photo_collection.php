@@ -111,7 +111,7 @@
                 </div>
                 
                 <?php
-                if($photoCollectionAdminId == $userId){
+                if($photoCollectionAdminId == $userId || $isAdmin){
                 ?>
                     <div class="col-md-4">
                         <br><br><br><br>
@@ -143,7 +143,7 @@
                             <ul>
                                 <li> 
                                     <div class="col-md-6">
-                                        <div>Who can see your photo collection?</div>
+                                        <div>Who can see this photo collection?</div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="dropdown">

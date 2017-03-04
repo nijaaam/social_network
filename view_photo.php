@@ -27,6 +27,26 @@
         exit;
     }
 
+    $sql = mysql_query("SELECT * FROM photolikes WHERE photoID =".$photoId." AND userID =".$userId);
+    $row = mysql_fetch_array($sql, MYSQL_NUM);
+    $liked = $row[0];
+    $likeAction = "";
+    if($liked)
+        $likeAction = "Unlike";
+    else
+        $likeAction = "Like";
+
+    $sql = mysql_query("SELECT COUNT(*) FROM `photolikes` WHERE photoID =".$photoId);
+    $row = mysql_fetch_array($sql, MYSQL_NUM);
+    $likeNo = $row[0];
+    $likeCountHeader = "";
+    if(!$likeNo)
+        $likeNo = "0";
+    if($like == 1)
+        $likeCountHeader = $likeNo." like";
+    else
+        $likeCountHeader = $likeNo." likes";
+
     require_once 'check_admin.php';
 ?>
 
@@ -99,6 +119,16 @@
               <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span style="color:white;"><?php echo $likeCountHeader ?></span>
+                            <span style="float:right; font-family:sans-serif">
+                                <form method="post" action="functions.php">
+                                    <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>    
+                                    <input type="hidden" name="like_photo_action" value="<?php echo $likeAction ?>"/>    
+                                    <button type="submit" class="btn-primary"><?php echo " ".$likeAction?></button>
+                                </form>
+                            </span>
+                        </div>
                         <div class="panel-body" style="overflow: auto;" >
                             <img class="resize" style="max-width:500px; margin: 0 auto" src="<?php echo $image?>" />
                         </div>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 03, 2017 at 02:59 AM
+-- Generation Time: Mar 04, 2017 at 02:45 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -118,19 +118,6 @@ INSERT INTO `circles` (`circleID`, `name`, `adminUserId`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contactinfo`
---
-
-CREATE TABLE IF NOT EXISTS `contactinfo` (
-  `userID` int(11) NOT NULL,
-  `mobileNo` int(11) NOT NULL,
-  `landlineN` int(11) NOT NULL,
-  `email` varchar(240) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `generalsettings`
 --
 
@@ -139,17 +126,6 @@ CREATE TABLE IF NOT EXISTS `generalsettings` (
   `language` varchar(240) NOT NULL,
   `timeZone` varchar(240) NOT NULL,
   `country` varchar(240) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `likes`
---
-
-CREATE TABLE IF NOT EXISTS `likes` (
-  `photoID` int(11) NOT NULL,
-  `userID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -262,6 +238,26 @@ INSERT INTO `photocomments` (`commentID`, `photoID`, `userID`, `comment`, `dateT
 (8, 23, 26, 'hello', '2017-03-03 01:53:36'),
 (9, 23, 24, 'its fine', '2017-03-03 01:57:22'),
 (10, 21, 24, 'Hello', '2017-03-03 01:58:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `photolikes`
+--
+
+CREATE TABLE IF NOT EXISTS `photolikes` (
+  `photoID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  PRIMARY KEY (`photoID`,`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `photolikes`
+--
+
+INSERT INTO `photolikes` (`photoID`, `userID`) VALUES
+(23, 24),
+(23, 26);
 
 -- --------------------------------------------------------
 

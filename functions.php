@@ -69,42 +69,6 @@
         exit;
     }
 
-    if($request == "make_admin"){
-        $id = $_GET['id'];
-        mysql_query("INSERT INTO `admins` (`userID`) VALUES ('$id')")or die(mysql_error());
-        header("Location: view_profile.php?action=view&id=$id");
-        exit;
-    }
-
-    if($request == "remove_admin"){
-        $id = $_GET['id'];
-        mysql_query("DELETE FROM `admins` WHERE `admins`.`userID` = '$id'")or die(mysql_error());
-        header("Location: view_profile.php?action=view&id=$id");
-        exit;
-    }
-
-    if($_POST['edit_profile']) {
-        $id = $_POST['id'];
-        $firstName = $_POST['firstName'];
-        $surname = $_POST['surname'];
-        $email = $_POST['email'];
-        $city = $_POST['city'];
-        $country = $_POST['country'];
-        $gender = $_POST['gender'];
-        $birthday = $_POST['dob'];
-
-        // TODO validation etc.
-
-        $query = "UPDATE personalinfo SET firstName = '$firstName', surname = '$surname', gender = '$gender', city = '$city', country = '$country', birthday = '$birthday' WHERE userID = '$id'";
-        $res = mysql_query($query) or die(mysql_error());
-
-        $query = "UPDATE users SET email = '$email' WHERE userID = '$id'";
-        $res = mysql_query($query) or die(mysql_error());
-
-        header("Location: view_profile.php?action=view&id=$id");
-        exit;
-    }
-
     if($_POST['add_friend_circle']){
         // add friend circle sql
         $friendIdsList = array();
@@ -255,5 +219,19 @@
             header("Location: view_photo_collection.php?action=view&id=".$photoCollectionId);
             exit;
         }
+    }
+
+    if($_POST['like_photo_action'] != ""){
+        $photoId = $_POST['photoId'];
+        $sql = "";
+        $likeAction = $_POST['like_photo_action'];
+        if($likeAction == "Like")
+            $sql = "INSERT INTO photolikes (photoID, userID) VALUES ('$photoId', '$userId')";
+        else
+            $sql = "DELETE FROM photolikes WHERE photoID = '$photoId' AND userID = '$userId'";
+        
+        $res = mysql_query($sql) or die(mysql_error());
+        header("Location: view_photo.php");
+        exit;
     }
 ?>

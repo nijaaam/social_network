@@ -73,19 +73,21 @@
                 <div class="col-md-8">
                   <div class="groups">
                     <h1 class="page-header">Photo Collections</h1>
-                        <?php 
-                            $query = "SELECT photoCollectionID, name, whoCanSee FROM photocollections";
-                            $sql = mysql_query($query) or die (mysql_error());
-                            while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
-                                $photoCollectionId = $row[0];
-                                $name = $row[1];
-                                $whoCanSee = $row[2];
-                        ?>
+                <?php 
+                    $query = "SELECT photoCollectionID, name, whoCanSee, firstName, surname FROM photocollections as p, personalinfo as pi WHERE p.userID = pi.userID";
+                    $sql = mysql_query($query) or die (mysql_error());
+                    while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                        $photoCollectionId = $row[0];
+                        $name = $row[1];
+                        $whoCanSee = $row[2];
+                        $colletionOwner = $row[3]." ".$row[4];
+                ?>
                           <div class="group-item">
                                 <img src="img/group.png" alt="">
                                 <h3>&nbsp;&nbsp;&nbsp;
                                     <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
                                 </h3>
+                                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner?></h5>
                           </div>
                           <div class="clearfix"></div>
                 <?php
