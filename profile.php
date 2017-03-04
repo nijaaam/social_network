@@ -210,9 +210,6 @@
                   
                   $whoCanSeeBlogText = $whoCanSeeOptions[$whoCanSeeBlogValue];
                   $whoCanSeeProfileText = $whoCanSeeOptions[$whoCanSeeProfileValue];
-                                    
-//                  $whoCanSendFriendRequests = $userRow['whoCanSendFriendRequests'];
-//                  $whoCanSendFriendRequestsOptions = array("Everyone", "Friends of friends");
                   
                   // Will deal with these cases later if we have time
                   $visibleName = $userRow['visibleName'];

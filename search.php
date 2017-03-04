@@ -107,14 +107,22 @@ function array_key_unique($arr, $key) {
                 <form name="searchAll" method="POST" action="search.php" autocomplete="off">
                     <div class="form-group" style="max-width:300px">
                         <div class="input-group col-md-12">
-                            <input type="text" name="search_friends" class="form-control input-md" placeholder="Search all users" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-md" type="submit">
-                                    <i class="glyphicon glyphicon-search"></i>
+                            <div class="panel panel-default post">
+                                <span>
+                                    <input type="text" name="search_friends" class="form-control input-md" placeholder="Search users" />
+                                    <span>
+                                        <span>&nbsp;&nbsp;Friends of friends&nbsp;&nbsp;</span>
+                                        <input type="checkbox" name="friends_of_friends"/>
+                                    </span>
+                                </span>
+                                <button class="btn btn-info btn-md" type="submit" style="float:right">
+                                        <i class="glyphicon glyphicon-search"></i>
                                 </button>
+                            </div>
                         </div>
                     </div>        
                 </form>
+                <br>
                 <form name="searchFriendBlogs" method="POST" action="search.php" autocomplete="off">
                     <div class="form-group" style="max-width:300px">
                         <div class="input-group col-md-12">
@@ -141,13 +149,14 @@ function array_key_unique($arr, $key) {
                 <?php
                     if(isset($_POST['search_friends'])){
                         // Search by search query
+                        $filterFriendsOfFriends = $_POST['friends_of_friends'];
                         $search_term = $_POST['search_friends'];
-                        search_members($search_term, 0);
+                        search_members($search_term, 0, $filterFriendsOfFriends);
                     }
                     else if(isset($_GET['search_friends_of_friends'])){
                         // Search by friends of friends
                         $id = $_GET['search_friends_of_friends'];
-                        search_members(0, $id);
+                        search_members(0, $id, 0);
                     }
                     else if(isset($_POST['search_friend_blogs'])){
                         $search_term = $_POST['search_friend_blogs'];
@@ -156,7 +165,7 @@ function array_key_unique($arr, $key) {
                     else{
                         // Default search on search page. "Suggested friends".
                         // This is where you put your collaborative filtering method of finding friends.
-                        search_members(-1,-1);
+                        search_members(-1, -1, 0);
                     }
                 ?>
 

@@ -8,6 +8,7 @@
 	}
 	$email  = $_SESSION['email'];
 	$userId = $_SESSION['user'];
+    $visibilityOptions = array("Friends", "Friend Circles", "Friends of friends");
 	require_once 'check_admin.php';
 ?>
 
@@ -94,11 +95,11 @@
                         $colletionOwner = $row[3]." ".$row[4];
                 ?>
                           <div class="group-item">
-                                <img src="img/group.png" alt="">
                                 <h3>&nbsp;&nbsp;&nbsp;
                                     <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
                                 </h3>
-                                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner?></h5>
+                                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner ?></h5>
+                                <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visible to: <?php echo $visibilityOptions[$whoCanSee]?></h5>
                           </div>
                           <div class="clearfix"></div>
                 <?php
