@@ -86,46 +86,41 @@
           <div class="col-md-8">
             <div class="members">
               <h1 class="page-header">Friends</h1>
-                
-                
-                    <?php
-                        $sql = mysql_query(" SELECT userID, firstName, surname, invitationSentBy, invitationAccepted FROM personalinfo, relationships WHERE (userID1 = '".$_SESSION['user']."' AND userID2 = userID)") or die (mysql_error());
-                        $array = array();
-                        while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
-                            $array[] = $row;
-                        }
-
-                        foreach ($array as $v) {
-                            $invitationAccepted = $v[4];
-
-                            if($invitationAccepted == 1){ 
-                                $id = $v[0];
-                                $firstName = $v[1];
-                                $surname = $v[2];
-                                $headerName =  $firstName." ".$surname."'s Friends";
-
-                                ?>
-                                  <div class="row member-row">
-                                    <div class="col-md-3">
-                                      <img src="img/user.png" class="img-thumbnail" alt="">
-                                      <div class="text-center">
-                                        <?php echo $firstName." ".$surname ?>
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                      <p><a href="view_profile.php?action=view&id=<?php echo $id?>" class="btn btn-primary btn-block"><i class="fa fa-edit"></i> View Profile</a></p>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <p><a href="search.php?action=view&search_friends_of_friends=<?php echo $id?>&header=<?php echo $headerName ?>" class="btn btn-default btn-block"><i class="fa fa-users"></i> View Friends</a></p>
-                                    </div>
-                                  </div>
-                <?php
-                            }
-                        }		
-                    ?>
-                
-
+                  <?php
+                    $friends = array();
+                    $userId = $_SESSION['user'];
+                    $query1 = "SELECT userID2 FROM relationships WHERE userID1 = $userId and invitationAccepted = 1";
+                    $query2 = "SELECT userID1 FROM relationships WHERE userID2 = $userId and invitationAccepted = 1";
+                    $result1 = mysql_query($query1) or die(mysql_error());
+                    $result2 = mysql_query($query2) or die(mysql_error());
+                    while ($row = mysql_fetch_array($result1)){
+                      array_push($friends, $row['userID2']);
+                    }
+                    while ($row = mysql_fetch_array($result2)){
+                      array_push($friends, $row['userID1']);
+                    }
+                    $result = array_unique($friends);
+                    foreach ($result as $val) {
+                        $id = $val;
+                        $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $id");
+                        $fullName = mysql_fetch_array($name)[0];
+                        $headerName = $fullName . "'s Friends";
+                        ?>
+                        <div class="row member-row">
+                          <div class="col-md-3">
+                            <img src="img/user.png" class="img-thumbnail" alt="">
+                            <div class="text-center"><?php echo $fullName ?></div>
+                          </div>
+                          <div class="col-md-3">
+                            <p><a href="view_profile.php?action=view&id=<?php echo $id?>" class="btn btn-primary btn-block"><i class="fa fa-edit"></i> View Profile</a></p>
+                          </div>
+                          <div class="col-md-3">
+                            <p><a href="search.php?action=view&search_friends_of_friends=<?php echo $id?>&header=<?php echo $headerName ?>" class="btn btn-default btn-block"><i class="fa fa-users"></i> View Friends</a></p>
+                          </div>
+                        </div>
+                        <?php
+                    }
+                  ?>
               </div>
           </div>
             
@@ -137,37 +132,31 @@
               </div>
               <div class="panel-body">
                   <?php
-                  foreach ($array as $v) {
-                            $invitationSentBy = $v[3];
-                            $invitationAccepted = $v[4];
-
-                            if($invitationSentBy != $_SESSION['user'] && $invitationAccepted == 0){
-                                $id = $v[0];
-                                $firstName = $v[1];
-                                $surname = $v[2];
-                  ?>
-                            <ul>
-                                  <div class="row member-row">
-                                    <div class="col-md-3">
-                                      <img src="img/user.png" class="img-thumbnail" alt="">
-                                      <div class="text-center">
-                                        <?php echo $firstName." ".$surname ?>
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                      <p><a href="functions.php?action=view&request=accept_friend_request&id=<?php echo $id?>" class="btn btn-success btn-block"><i class="fa fa-check-circle"></i></a></p>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <p><a href="functions.php?action=view&request=reject_friend_request&id=<?php echo $id?>" class="btn btn-danger btn-block"><i class="fa fa-remove"></i></a></p>
-                                    </div>
-                                      <br><br>
-                                  </div>
-                            </ul>
-                <?php
-                            }
+                  $userId = $_SESSION['user'];
+                  $query = "select * from relationships WHERE invitationAccepted = 0 AND userID2 = '$userId'";
+                  $result = mysql_query($query) or die(mysql_error());
+                  while($row = mysql_fetch_array($result)){
+                    $id = $row['userID1'];
+                    $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $id");
+                    $fullName = mysql_fetch_array($name)[0];
+                    ?>
+                    <ul>
+                      <div class="row member-row">
+                        <div class="col-md-3">
+                          <img src="img/user.png" class="img-thumbnail" alt="">
+                          <div class="text-center"><?php echo $fullName ?></div>
+                        </div>
+                        <div class="col-md-3">
+                          <p><a href="functions.php?action=view&request=accept_friend_request&id=<?php echo $id?>" class="btn btn-success btn-block"><i class="fa fa-check-circle"></i></a></p>
+                        </div>
+                        <div class="col-md-3">
+                          <p><a href="functions.php?action=view&request=reject_friend_request&id=<?php echo $id?>" class="btn btn-danger btn-block"><i class="fa fa-remove"></i></a></p>
+                        </div>
+                      </div>
+                    </ul>
+                    <?php
                   }
-                ?>
+                  ?>
               </div>
             </div>
               
@@ -176,31 +165,28 @@
                 <h3 class="panel-title">Pending sent requests</h3>
               </div>
               <div class="panel-body">
-                  <ul>
+                <ul>
                   <?php
-                  foreach ($array as $v) {
-                            $invitationSentBy = $v[3];
-                            $invitationAccepted = $v[4];
-
-                            if($invitationSentBy == $_SESSION['user'] && $invitationAccepted == 0){ 
-                                $id = $v[0];
-                                $firstName = $v[1];
-                                $surname = $v[2];
+                    $userId = $_SESSION['user'];
+                    $query = "select * from relationships WHERE invitationAccepted = 0 AND userID1 = '$userId'";
+                    $result = mysql_query($query) or die(mysql_error());
+                    while($row = mysql_fetch_array($result)){
+                      $id = $row['userID2'];
+                      $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $id");
+                      $fullName = mysql_fetch_array($name)[0];
+                      ?>
+                      <ul>
+                        <li>
+                          <div style="width: 50px;margin: 0 auto;">
+                            <img src="img/user.png" class="img-thumbnail" alt="">
+                              <div class="text-center"><?php echo $fullName?></div>
+                          </div>
+                        </li>
+                      </ul>
+                      <?php }
                   ?>
-                            <ul>
-                                <li>
-                                    <div style="width: 50px;margin: 0 auto;">
-                                      <img src="img/user.png" class="img-thumbnail" alt="">
-                                      <div class="text-center">
-                                        <?php echo $firstName." ".$surname ?>
-                                      </div>
-                                    </div>
-                                </li>
-                <?php
-                            }
-                  }
-                ?>
-                </ul>
+                </ul>  
+             
               </div>
             </div>
               
