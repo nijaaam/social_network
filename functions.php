@@ -65,6 +65,13 @@ if($request == "make_admin"){
     header("Location: view_profile.php?action=view&id=$userId");
 }
 
+if($request == "delete_post"){
+    $userId = $_GET['id'];
+    $postId = $_GET['postId'];
+    mysql_query("DELETE FROM blogPosts WHERE postID = '$postId'") or die(mysql_error());
+    header("Location: view_profile.php?action=view&id=$userId");
+}
+
 if($request == "change_privacy_admin"){
     $option = $_GET['option'];
     $value = $_GET['value'];

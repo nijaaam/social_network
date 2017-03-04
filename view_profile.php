@@ -181,7 +181,7 @@
                     $canSeeBlog = $row['whoCanSeeBlog'] == 0 || ($row['whoCanSeeBlog'] == 1 && $isFriends) || $isAdmin; 
                     if($canSeeBlog){
 
-                        $query = "SELECT blogPostBody, dateTime FROM blogPosts WHERE userID =".$profileUserId." ORDER BY dateTime DESC";  
+                        $query = "SELECT blogPostBody, dateTime, postID FROM blogPosts WHERE userID =".$profileUserId." ORDER BY dateTime DESC";  
                         $sql = mysql_query($query);
                         
                         $num_of_row   = mysql_num_rows($sql);
@@ -192,6 +192,7 @@
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                             $postBody = $row[0];
                             $timeSent = $row[1];
+                            $postId = $row[2];
                             $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
                             $timeSent = $myDateTime->format('d/m/Y H:m');
                     ?> 
@@ -204,6 +205,11 @@
                                <div class="pointer">
                                  <p><?php echo $postBody ?></p>
                                </div>
+                               <?php if($isAdmin) { ?>
+                                  <a href="functions.php?action=view&request=delete_post&id=<?php echo $profileUserId?>&postId=<?php echo $postId?>">
+                                      <button style="float:left" type="submit" name="deletePost" class="btn btn-danger">Delete</button>
+                                  </a>
+                              <?php }?>
                                <div class="pointer-border"></div>
                                <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
                              </div>
