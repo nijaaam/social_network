@@ -75,18 +75,22 @@
                   <div class="groups">
                     <h1 class="page-header">Photo Collections</h1>
                 <?php 
-                    $query = "SELECT photoCollectionID, name, whoCanSee, firstName, surname FROM photocollections as p, personalinfo as pi 
-                    WHERE 
-                    (
-                        p.userID = ".$userId."
-                        OR
-                        ((whoCanSee = 0 OR whoCanSee = 2) AND EXISTS (SELECT * FROM relationships WHERE userID1 = p.userID AND userID2 = ".$userId."))  
-                        OR
-                        (whoCanSee = 1 AND EXISTS (SELECT circleID FROM `circlememberships` WHERE userID IN (p.userID,".$userId.") GROUP BY circleID HAVING COUNT(*)>1))
-                        OR
-                        (whoCanSee = 2 AND EXISTS (SELECT F2.userID1 FROM relationships F JOIN relationships F2 ON F.userID1 = F2.userID2 WHERE F2.userID1 NOT IN (SELECT userID1 FROM relationships WHERE userID2 = p.userID) AND F.userID2 = p.userID AND F2.userID1 = ".$userId."))
-                    )    
-                    AND p.userID = pi.userID";
+                    $query = "";
+                    if($isAdmin)
+                        $query = "SELECT photoCollectionID, name, whoCanSee, firstName, surname FROM photocollections as p, personalinfo as pi WHERE p.userID = pi.userID";
+                    else
+                        $query = "SELECT photoCollectionID, name, whoCanSee, firstName, surname FROM photocollections as p, personalinfo as pi 
+                                    WHERE 
+                                    (
+                                        p.userID = ".$userId."
+                                        OR
+                                        ((whoCanSee = 0 OR whoCanSee = 2) AND EXISTS (SELECT * FROM relationships WHERE userID1 = p.userID AND userID2 = ".$userId."))  
+                                        OR
+                                        (whoCanSee = 1 AND EXISTS (SELECT circleID FROM `circlememberships` WHERE userID IN (p.userID,".$userId.") GROUP BY circleID HAVING COUNT(*)>1))
+                                        OR
+                                        (whoCanSee = 2 AND EXISTS (SELECT F2.userID1 FROM relationships F JOIN relationships F2 ON F.userID1 = F2.userID2 WHERE F2.userID1 NOT IN (SELECT userID1 FROM relationships WHERE userID2 = p.userID) AND F.userID2 = p.userID AND F2.userID1 = ".$userId."))
+                                    )    
+                                    AND p.userID = pi.userID";
                     $sql = mysql_query($query) or die (mysql_error());
                     while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                         $photoCollectionId = $row[0];
