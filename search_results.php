@@ -98,8 +98,7 @@
 	function search_friend_blogs($search_term){      
             $userId = $_SESSION['user'];
             $friends = array();
-            if($search_term == "")
-                return;
+            
             $query1 = "SELECT userID2 FROM relationships WHERE userID1 = $userId and invitationAccepted = 1";
             $result1 = mysql_query($query1) or die(mysql_error());
             while ($row = mysql_fetch_array($result1)){
@@ -108,7 +107,7 @@
             $result = array_unique($friends);
             $posts = array();
             foreach ($friends as $val) {
-                $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%'") or die(mysql_error());
+                $result = mysql_query("SELECT * FROM blogposts WHERE blogPostBody LIKE '%$search_term%' ORDER BY dateTime DESC") or die(mysql_error());
                 while($row = mysql_fetch_array($result)){
                     array_push($posts,$row);
                 }
