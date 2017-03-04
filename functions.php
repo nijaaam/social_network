@@ -2,14 +2,15 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
-    require_once 'functions.php';
 
     $userId = $_SESSION['user'];
     $request = $_GET['request'];
 
     if($request == "add_friend"){
         $friendId = $_GET['id'];
-        mysql_query("INSERT INTO relationships(userID1,userID2,invitationSentBy,invitationAccepted,timeRequestSent,timeRequestAccepted) VALUES ('$userId','$friendId','$userId',0,now(),now()),('$friendId','$userId','$userId',0,now(),now())")or die(mysql_error());
+        echo $userId;
+        $query = "INSERT INTO relationships VALUES($userId,$friendId,$userId,0,now(),now());"; 
+        mysql_query($query) or die(mysql_error());
         header("Location: friends.php");
         exit;
     }

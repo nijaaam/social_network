@@ -27,8 +27,7 @@
                 $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
             }
         
-			$sql = mysql_query($query) or die (mysql_error());
-        
+			       $sql = mysql_query($query) or die (mysql_error());
             $num_of_row   = mysql_num_rows($sql);
             if ($num_of_row > 0 ){
                  while($row    = mysql_fetch_array($sql)){ 
