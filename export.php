@@ -50,7 +50,7 @@ if (isset($_POST['export'])) {
     $userId = $_SESSION['user'];
     $query  = "SELECT * FROM personalinfo WHERE personalinfo.userID='$userId'";
     $xml .= get_xml($query, "personalinfo");
-    $query = "SELECT email,securityQuestion,securityAnswer FROM users WHERE users.userID='$userId'";
+    $query = "SELECT * FROM users WHERE users.userID='$userId'";
     $xml .= get_xml($query, "user");
     $query = "SELECT * FROM securitysettings WHERE userID='$userId'";
     $xml .= get_xml($query, "security");

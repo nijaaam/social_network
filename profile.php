@@ -3,8 +3,6 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
-
-    
        // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
         header("Location: index.php");
@@ -107,9 +105,26 @@
                         <button type="submit" name="edit" class="btn btn-default" style="margin-bottom: 10px;">
                             Edit Details...</button></li>
                     <li>
+                    
+                    <form action="import.php" method="post" enctype="multipart/form-data">
+                      <input id = "file" type="file" name="xml">
+                      </br>
+                      <button id = "import" type="submit" name="import" class="btn btn-default" style="margin-bottom: 10px;">
+                        Import XML</button>
+                  </form>
+                  <script type="text/javascript">
+                  $('#import').click(function(){
+                    $('#file').trigger('click');
+                    return false;
+                  });
+                  </script>
+                    
+                    <li>
                         <form method="POST" action='export.php'>
                             <button type="submit" name="export" class="btn btn-default">Export XML</button>
                         </form>
+                        </br>
+                        
                     </li>
                   </ul>
                 </div>
