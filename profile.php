@@ -150,11 +150,12 @@
               
                     <?php
                         $userId = $_SESSION['user'];
-                        $query = "SELECT blogPostBody, dateTime FROM blogposts WHERE userID ='$userId' ORDER BY dateTime DESC";  
+                        $query = "SELECT blogPostBody, dateTime, postID FROM blogposts WHERE userID ='$userId' ORDER BY dateTime DESC";  
                         $sql = mysql_query($query) or die('sfa' . mysql_error());
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                             $postBody = $row[0];
                             $timeSent = $row[1];
+                            $postID = $row[2];
                             $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
                             $timeSent = $myDateTime->format('d/m/Y H:m');
                     ?> 
@@ -167,6 +168,12 @@
                                <div class="pointer">
                                  <p><?php echo $postBody ?></p>
                                </div>
+                                <form name="deletePostForm" action="functions.php" method="post">
+                                  <div class="form-group">
+                                    <input type="hidden" name="delete_post" value="<?php echo $postID ?>"/>
+                                    <button style="float:left" type="submit" class="btn btn-danger">Delete</button>
+                                  </div>
+                                </form>
                                <div class="pointer-border"></div>
                                <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
                              </div>

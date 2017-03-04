@@ -257,4 +257,13 @@ if($_POST['delete_photo_comment'] != ""){
     header("Location: view_photo.php");
     exit;
 }
+
+if($_POST['delete_post'] != ""){
+    $postId = $_POST['delete_post'];
+    $sql = "DELETE FROM blogposts WHERE postID = '$postId'";
+
+    $res = mysql_query($sql) or die(mysql_error());
+    header("Location: profile.php");
+    exit;
+}
 ?>
