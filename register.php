@@ -4,7 +4,7 @@ session_start();
 if( isset($_SESSION['user'])!="" ){
 	header("Location: profile.php");
 }
-include_once 'dbconnect.php';
+require_once 'dbconnect.php';
 include_once 'validation_functions.php';
 
 $error = false;
@@ -33,7 +33,7 @@ if ( isset($_POST['btn-signup']) ) {
 	$passError = validate('password', $pass, 6);
 	$genderError = validate_select('gender', $gender);
 	$securityQuestionError = validate_select('security question', $securityQuestion);
-	$emailError = validate_email($email);
+	$emailError = validate_email($email, true);
 
 		// password encrypt using SHA256();
 	$password = hash('sha256', $pass);
@@ -52,7 +52,7 @@ if ( isset($_POST['btn-signup']) ) {
 
 		$query = "COMMIT;";            
 
-		$res = mysql_query($query) or die(mysql_error());;
+		$res = mysql_query($query) or die(mysql_error());
 
 		if ($res) {
 			$errTyp = "success";

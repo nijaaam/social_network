@@ -33,12 +33,12 @@
 		}
 	}
 
-	function validate_email($value){
+	function validate_email($value, $check_existence=false){
 		global $error;
 		if (!filter_var($value, FILTER_VALIDATE_EMAIL)){
 			$error = true;
 			return "Please enter a valid email address.";
-		} else {
+		} else if($check_existence == true){
 			// check email exist or not
 			$query = "SELECT email FROM users WHERE email='$value'";
 			$result = mysql_query($query);
