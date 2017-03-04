@@ -176,9 +176,10 @@
     if($_POST['new_photo_collection'] != ""){
         if (isset($_POST['upload'])) {
             $count = count($_FILES['img']['name']);
+            $collectionName = $_POST['new_photo_collection'];
             $sql = "START TRANSACTION;";
             $res = mysql_query($sql);
-            $sql = "INSERT INTO photoCollections(userID) VALUES('$userId');";
+            $sql = "INSERT INTO photoCollections(userID,name) VALUES('$userId','$collectionName');";
             $res = mysql_query($sql);
             $photoCollectionId = mysql_insert_id();
 
