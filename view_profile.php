@@ -465,7 +465,12 @@
                   </div>
               </div>
             <?php } ?>
-
+            <?php if($isAdmin) { ?>
+                 <form method="post" action="functions.php" onsubmit="return confirm_delete()">
+                     <input type="hidden" name="delete_user" value="<?php echo $profileUserId ?>"/>      
+                    <button type="submit" class="btn btn-danger">Delete User</button>
+                </form>
+            <?php }?>
           </div>
         </div>
             
@@ -493,6 +498,13 @@
                 $('#profile_form').hide();
             }
         });
+
+function confirm_delete(){
+  if(confirm("This action will delete the user's photo collections, blog posts and circles which they are an administor in.\n\nAre you sure you want to delete this User?")){
+  return true;
+  }
+  return false;
+}
     </script>
   </body>
 </html>

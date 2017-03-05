@@ -312,4 +312,89 @@ if($_POST['delete_photo'] != ""){
     header("Location: view_photo_collection.php?action=view&id=".$collectionId);
     exit;
 }
+
+if($_POST['delete_user'] != ""){
+    $userProfileId = $_POST['delete_user'];
+
+    $sql = "START TRANSACTION;";
+    $res = mysql_query($sql);
+
+    //delete all likes on their photos
+    $sql = "DELETE FROM photolikes WHERE photoID IN (SELECT photoID FROM photos WHERE photoCollectionID IN ( SELECT photoCollectionID FROM photocollections WHERE userID='$userProfileId'))";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all comments on their photos
+    $sql = "DELETE FROM photocomments WHERE photoID IN (SELECT photoID FROM photos WHERE photoCollectionID IN ( SELECT photoCollectionID FROM photocollections WHERE userID='$userProfileId'))";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their likes on other users photos
+    $sql = "DELETE FROM photolikes WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their comments on other users photos
+    $sql = "DELETE FROM photocomments WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete their photos
+    $sql = "DELETE FROM photos WHERE photoCollectionID IN (SELECT photoCollectionID FROM photocollections WHERE userID='$userProfileId')";
+    $res = mysql_query($sql) or die(mysql_error());
+   
+    //delete all of their photo collections
+    $sql = "DELETE FROM photocollections WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their relationships
+    $sql = "DELETE FROM relationships WHERE userID1 = '$userProfileId' OR userID2 = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their security settings
+    $sql = "DELETE FROM securitysettings WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their personal info
+    $sql = "DELETE FROM personalInfo WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their blogposts
+    $sql = "DELETE FROM blogposts WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their general settings
+    $sql = "DELETE FROM generalsettings WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their messages in message circles
+    $sql = "DELETE FROM messagecircles WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of their circle memberships
+    $sql = "DELETE FROM circlememberships WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all of messages in the circels where they are the admin
+    $sql = "DELETE FROM messagecircles WHERE circleID IN (SELECT circleID FROM circles where adminUserId = '$userProfileId')";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all circle memberships in the circels where they are the admin
+    $sql = "DELETE FROM circlememberships WHERE circleID IN (SELECT circleID FROM circles where adminUserId = '$userProfileId')";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete all the circels where they are the admin
+    $sql = "DELETE FROM circles WHERE adminUserID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete from the admin table if they are an admin
+    $sql = "DELETE FROM admins WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    //delete from the user table
+    $sql = "DELETE FROM users WHERE userID = '$userProfileId'";
+    $res = mysql_query($sql) or die(mysql_error());
+
+    $sql = "COMMIT";
+    $res = mysql_query($sql);
+
+    header("Location: friends.php");
+    exit;
+}
 ?>
