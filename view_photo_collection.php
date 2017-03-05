@@ -127,8 +127,10 @@ require_once 'check_admin.php';
                                     <div class="input-group col-md-12">
                                         <form name="uploadImageForm" method="POST" action="functions.php" enctype="multipart/form-data" onsubmit="return validateImage()">
                                             <input type="hidden" name="add_photo_collection" value="<?php echo $photoCollectionId; ?>"/>
+                                            <div class="form-group">
                                             <input type="file" multiple="multiple" name="img[]">
-                                            <input type="submit" name="upload" value="Upload">
+                                            </div>
+                                            <button type="submit" name="upload" class="btn btn-default">Upload</button>
                                         </form> 
                                     </div>
                                 </div>        
@@ -228,7 +230,7 @@ require_once 'check_admin.php';
             return true;
         }
     }
-    alert("The format of file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
+    alert("The format of the file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
     return false;
 }
 </script>
