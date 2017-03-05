@@ -92,9 +92,12 @@ if($_POST['photo_collection_title'] != ""){
             <div class="groups">
               <h1 class="page-header"><?php echo $header; ?></h1>
               <form name="uploadImageForm" method="POST" action="functions.php" enctype="multipart/form-data" onsubmit="return validateImage()">
+                <h4 style="color:#337ab7;">Select a picture to upload in this collection</h4>
                 <input type="hidden" name="new_photo_collection" value="<?php echo $header; ?>"/>
+                <div class="form-group">
                 <input type="file" multiple="multiple" name="img[]">
-                <input type="submit" name="upload" value="Upload">
+                </div>
+                <button type="submit" name="upload" class="btn btn-default">Upload</button>
               </form>    
               <div class="clearfix"></div>
             </div>
@@ -142,7 +145,7 @@ if($_POST['photo_collection_title'] != ""){
           return true;
         }
       }
-      alert("The format of file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
+      alert("The format of the file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
       return false;
     }
   </script>
