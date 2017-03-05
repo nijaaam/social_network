@@ -198,7 +198,7 @@ if($_POST['new_photo_collection'] != ""){
         $collectionName = $_POST['new_photo_collection'];
         $sql = "START TRANSACTION;";
         $res = mysql_query($sql);
-        $sql = "INSERT INTO photoCollections(userID,name) VALUES('$userId','$collectionName');";
+        $sql = "INSERT INTO photoCollections(userID,name,whoCanSee) VALUES('$userId','$collectionName',0);";
         $res = mysql_query($sql);
         $photoCollectionId = mysql_insert_id();
 
@@ -213,7 +213,7 @@ if($_POST['new_photo_collection'] != ""){
         $sql = "COMMIT;";            
         $res = mysql_query($sql) or die(mysql_error());
 
-        header("Location: photos.php");
+        header("Location: view_photo_collection.php?action=view&id=".$photoCollectionId);
         exit;
     }
 }
