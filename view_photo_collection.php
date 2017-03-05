@@ -92,6 +92,7 @@ require_once 'check_admin.php';
                     <?php
                     $query = "SELECT * FROM photos where photoCollectionID = '$photoCollectionId';";
                     $res = mysql_query($query) or die("Error in query: $query. ".mysql_error());
+                    $count = mysql_num_rows($res);
                     while($row=mysql_fetch_array($res)){
                         $name = $row["name"];
                         $content = base64_encode($row["image"]);
@@ -102,12 +103,14 @@ require_once 'check_admin.php';
                             <form method="post" action="view_photo.php">
                                 <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>
                                 <input type="hidden" name="photoAdminId" value="<?php echo $photoCollectionAdminId ?>"/>
+                                <input type="hidden" name="photoCollectionId" value="<?php echo $photoCollectionId ?>"/>
                                 <input style="max-width:150px" type="image" name="view_photo" value="<?php echo $image ?>" src="data:image/jpeg;base64,<?php echo $content?>" value="Submit" />
                             </form>
                         </li>
                         <?php
                     }
                     ?>
+                    <h4 <?php if($count != 0){ echo "hidden"; } ?> style="color:#337ab7;">This collection has no images</h4>
                 </ul>
             </div>
             

@@ -20,11 +20,13 @@
         $image = $_POST['view_photo'];
         $photoId = $_POST['photoId'];
         $photoCollectionAdminId = $_POST['photoAdminId'];
+        $photoCollectionId = $_POST['photoCollectionId'];
     }
     else if($image == "" && $_SESSION['image'] != ""){
         $image = $_SESSION['image'];
         $photoId = $_SESSION['photoId'];
         $photoCollectionAdminId = $_SESSION['photoAdminId'];
+        $photoCollectionId = $_POST['photoCollectionId'];
     }
     else{
         header("Location: photos.php");
@@ -127,18 +129,29 @@
               <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div style="height: 55px;" class="panel-heading">
                             <span style="color:white;"><?php echo $likeCountHeader ?></span>
                             <span style="float:right; font-family:sans-serif">
                                 <form method="post" action="functions.php">
                                     <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>    
                                     <input type="hidden" name="like_photo_action" value="<?php echo $likeAction ?>"/>    
-                                    <button type="submit" class="btn-primary"><?php echo " ".$likeAction?></button>
+                                    <button type="submit" class="btn btn-primary"><?php echo $likeAction?></button>
                                 </form>
                             </span>
                         </div>
                         <div class="panel-body" style="overflow: auto;" >
+                        <div class="form-group">
                             <img class="resize" style="max-width:500px; margin: 0 auto" src="<?php echo $image?>" />
+                            </div>
+                            <div <?php if(!$canDeleteComment){ echo "hidden";} ?> class="form-group">
+                            <form name="deletePhotoForm" action="functions.php" method="post" onsubmit="return confirm_delete()">
+                            <div>
+                                <input type="hidden" name="delete_photo" value="<?php echo $photoId ?>"/>
+                                <input type="hidden" name="photo_collection" value="<?php echo $photoCollectionId ?>"/>
+                                <button type="submit" class="btn btn-danger">Delete Photo</button>
+                            </div>
+                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,6 +176,7 @@
                                 $_SESSION['image'] = $image;
                                 $_SESSION['photoId'] = $photoId;
                                 $_SESSION['photoAdminId'] = $photoCollectionAdminId;
+                                $_SESSION['photoCollectionId'] = $photoCollectionAdminId;
                               ?>
                           </div>
                           <button type="submit" class="btn btn-default">Post</button>
@@ -250,5 +264,12 @@ function validateInput(){
         alert("Comment cannot be empty.");
         return false;
     }
+}
+
+function confirm_delete(){
+  if(confirm("Are you sure you want to delete this photo?")){
+  return true;
+  }
+  return false;
 }
 </script>
