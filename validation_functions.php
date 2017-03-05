@@ -50,5 +50,24 @@
 		}
 	}
 
+	function validate_email2($value, $current, $check_existence=false){
+		global $error;
+		if (!filter_var($value, FILTER_VALIDATE_EMAIL)){
+			$error = true;
+			return "Please enter a valid email address.";
+		} else if($check_existence == true){
+			// check email exist or not
+			if($value != $current) {
+                $query = "SELECT email FROM users WHERE email='$value'";
+                $result = mysql_query($query);
+                $count = mysql_num_rows($result);
+                if ($count != 0) {
+                    $error = true;
+                    return "Provided Email is already in use.";
+                }
+            }
+		}
+	}
+
 ?>
 

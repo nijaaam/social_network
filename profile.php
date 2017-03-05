@@ -16,6 +16,39 @@
     $res=mysql_query($query) or die(mysql_error());
     $userRow=mysql_fetch_array($res);
     $fullName = $userRow['firstName']." ".$userRow['surname'];
+
+    include_once 'validation_functions.php';
+    if ( isset($_POST['edit-submit']) ) {
+        // clean user inputs to prevent sql injections
+        $firstName = clean_data('firstName');
+        $surname = clean_data('surname');
+        $email_new = clean_data('email');
+        $gender = clean_data('gender');
+        $city = clean_data('city');
+        $country= clean_data('country');
+        $birthday = clean_data('birthday');
+
+        // basic validation
+        $error = false;
+        $firstNameError = validate('first name', $firstName, 2 ,true);
+        $surnameError = validate('surname', $surname, 2, true);
+        $cityError = validate('city', $city, 3, true);
+        $countryError = validate('country', $country, 4, true);
+        $birthdayError = validate('birthday', $birthday, 10);
+        $genderError = validate_select('gender', $gender);
+        $emailError = validate_email2($email_new, $email, true);
+
+        if(!$error) {
+            $query = "UPDATE personalinfo SET firstName = '$firstName', surname = '$surname', gender = '$gender', city = '$city', country = '$country', birthday = '$birthday' WHERE userID = '$userId'";
+            $res = mysql_query($query) or die(mysql_error());
+
+            $query = "UPDATE users SET email = '$email' WHERE userID = '$userId'";
+            $res = mysql_query($query) or die(mysql_error());
+
+            $_SESSION['email'] = $email;
+            header("Location: profile.php");  // Refresh page
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,39 +125,104 @@
                 </div>
                 <div class="col-md-8">
                   <ul>
-                    <li><strong>Name: </strong><?php echo $fullName ;?></li>
-                    <li><strong>Email: </strong><?php echo $userRow['email'];?></li>
-                    <li><strong>City: </strong><?php echo $userRow['city'];?></li>
-                    <li><strong>Country: </strong><?php echo $userRow['country'];?></li>
-                    <li><strong>Gender: </strong><?php echo $userRow['gender'];?></li>
-                    <li><strong>DOB: </strong><?php                                     
-                                    $myDateTime = DateTime::createFromFormat('Y-m-d', $userRow['birthday']);
-                                    echo $myDateTime->format('d M Y'); ?></li>
+                      <div id="profile_static">
+                        <li><strong>Name: </strong><span id="fullName"><?php echo $fullName ;?></span></li>
+                        <li><strong>Email: </strong><span id="fullName"><?php echo $userRow['email'];?></span></li>
+                        <li><strong>City: </strong><span id="fullName"><?php echo $userRow['city'];?></span></li>
+                        <li><strong>Country: </strong><span id="fullName"><?php echo $userRow['country'];?></span></li>
+                        <li><strong>Gender: </strong><span id="fullName"><?php echo $userRow['gender'];?></span></li>
+                        <li><strong>DOB: </strong><?php
+                                        $myDateTime = DateTime::createFromFormat('Y-m-d', $userRow['birthday']);
+                                        echo $myDateTime->format('d M Y'); ?></li>
+                      </div>
+                      <form id="profile_form" style="display: none" name="editForm" method="POST">
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                  <input type="text" name="firstName" class="form-control" placeholder="First name" maxlength="50" value="<?php echo $userRow['firstName'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $firstNameError; ?></span>
+                          </div>
 
-                    <li>
-                        <button type="submit" name="edit" class="btn btn-default" style="margin-bottom: 10px;">
-                            Edit Details...</button></li>
-                    <li>
-                    
-                    <form action="import.php" method="post" enctype="multipart/form-data">
-                      <input id = "file" type="file" name="xml">
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                  <input type="text" name="surname" class="form-control" placeholder="Surname" maxlength="50" value="<?php echo $userRow['surname'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $surnameError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                                  <input type="email" name="email" class="form-control" placeholder="Email" maxlength="40" value="<?php echo $userRow['email'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $emailError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon"></span></span>
+                                  <input type="text" name="city" class="form-control" placeholder="City" maxlength="50" value="<?php echo $userRow['city'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $cityError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon"></span></span>
+                                  <input type="text" name="country" class="form-control" placeholder="Country" maxlength="50" value="<?php echo $userRow['country'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $countryError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                  <select name="gender" class="form-control">
+                                      <option value="" <?php if($userRow['gender'] == ''){echo("selected");}?> disabled hidden>Gender</option>
+                                      <option <?php if($userRow['gender'] == 'Male'){echo("selected");}?> value="Male">Male</option>
+                                      <option <?php if($userRow['gender'] == 'Female'){echo("selected");}?> value="Female">Female</option>
+                                  </select>
+                              </div>
+                              <span class="text-danger"><?php echo $genderError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon"></span></span>
+                                  <input type="date" name="birthday" class="form-control" placeholder="Birthday (yyyy-mm-dd)" maxlength="50" value="<?php echo $userRow['birthday'] ?>" />
+                              </div>
+                              <span class="text-danger"><?php echo $birthdayError; ?></span>
+                          </div>
+
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-block btn-primary" name="edit-submit">Submit</button>
+                          </div>
+                       </form>
+
+                      <li><button id="edit" type="submit" name="edit" class="btn btn-default" style="margin-bottom: 10px;">
+                              Edit Details...</button></li>
+
                       </br>
-                      <button id = "import" type="submit" name="import" class="btn btn-default" style="margin-bottom: 10px;">
+                    <li>
+                        <form action="import.php" method="post" enctype="multipart/form-data">
+                        <button id = "import" type="submit" name="import" class="btn btn-default" style="margin-bottom: 10px;">
                         Import XML</button>
-                  </form>
-                  <script type="text/javascript">
-                  $('#import').click(function(){
-                    $('#file').trigger('click');
-                    return false;
-                  });
-                  </script>
-                    
+                        <input id = "file" type="file" name="xml">
+                        </form>
+                          <script type="text/javascript">
+                          $('#import').click(function(){
+                            $('#file').trigger('click');
+                            return false;
+                          });
+                          </script>
+                    </li>
+                    </br>
                     <li>
                         <form method="POST" action='export.php'>
                             <button type="submit" name="export" class="btn btn-default">Export XML</button>
                         </form>
-                        </br>
-                        
                     </li>
                   </ul>
                 </div>
@@ -309,6 +407,17 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script type="text/javascript">
+        $('#edit').click(function(){
+            if($('#profile_static').is(":visible")) {
+                $('#profile_static').hide();
+                $('#profile_form').show();
+            } else {
+                $('#profile_static').show();
+                $('#profile_form').hide();
+            }
+        });
+    </script>
   </body>
 </html>
 
