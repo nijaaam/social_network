@@ -157,7 +157,7 @@
                     <div class="panel-body">
                         <form name="blogPhotoCommentForm" action="functions.php" method="post" onsubmit="return validateInput()">
                           <div class="form-group">
-                            <textarea name="post_photo_comment" class="form-control" placeholder="Write post"></textarea>
+                            <textarea name="post_photo_comment" class="form-control" placeholder="Write Comment"></textarea>
                             <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>
                             <?php 
                                 $_SESSION['image'] = $image;
