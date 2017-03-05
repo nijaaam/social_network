@@ -54,7 +54,7 @@ if (isset($_POST['export'])) {
     $xml .= get_xml($query, "user");
     $query = "SELECT * FROM securitysettings WHERE userID='$userId'";
     $xml .= get_xml($query, "security");
-    $query = "SELECT * FROM relationships WHERE  invitationAccepted = 1 and userID1 = $userId OR userID2 = $userId;";
+    $query = "SELECT * FROM relationships WHERE  invitationAccepted = 1 and userID1 = $userId";
     $xml .= get_xml2($query, "friends", "friend");
     $query = "SELECT * FROM blogposts WHERE userID = $userId";
     $xml .= get_xml2($query, "blogs", "post");
