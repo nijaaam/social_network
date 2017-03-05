@@ -138,13 +138,25 @@ require_once 'check_admin.php';
                         $colletionOwner = $row[3]." ".$row[4];
                         
                         ?>
-                        <div class="group-item">
+                         <div class="group-item">
+                        <div class="row member-row">
+                          <div class="col-md-5">
                             <h3>&nbsp;&nbsp;&nbsp;
                                 <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
                             </h3>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner ?></h5>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visible to: <?php echo $visibilityOptions[$whoCanSee]?></h5>
+                            </div>
+
+                            <form <?php if($isAdmin != true){ echo "hidden"; } ?> name="deleteCollectionForm" action="functions.php" method="post" onsubmit="return confirm_delete()">
+                            <div class="col-md-3">
+                                <input type="hidden" name="delete_collection" value="<?php echo $photoCollectionId ?>"/>
+                                <button type="submit" class="btn btn-danger btn-block">Delete</button>
+                            </div>
+                            </form>
                         </div>
+                        </div>
+                        <div class="clearfix"></div>
                         <div class="clearfix"></div>
                         <?php
                     }
