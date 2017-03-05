@@ -59,7 +59,7 @@
 		$d = $arr[$keys[3]];
 		$e = $arr[$keys[4]];
 		$f = $arr[$keys[5]];
-		$query = "INSERT INTO securitysettings VALUES('$a','$b','$c','$d','$e','$f')
+		$query = "INSERT INTO relationships VALUES('$a','$b','$c','$d','$e','$f')
 		ON DUPLICATE KEY UPDATE invitationSentBy = '$c', invitationAccepted = '$d', timeRequestSent = '$e', timeRequestAccepted = '$f'";
 		mysql_query($query) or die(mysql_error());
 	}
@@ -140,12 +140,13 @@
 	}
 
 	function upload_circle_messages($arr){
+		print_r($arr);
 		$keys = array_keys($arr);
 		$a = $arr[$keys[0]];
 		$b = $arr[$keys[1]];
 		$c = $arr[$keys[2]];
 		$d = $arr[$keys[3]];
-		$d = $arr[$keys[4]];
+		$e = $arr[$keys[4]];
 		$query = "INSERT INTO messagecircles VALUES('$a','$b','$c','$d','$e')
 		ON DUPLICATE KEY UPDATE userID = '$c', circleID = '$b', message ='$d', timeSent = '$e'";
 		mysql_query($query) or die(mysql_error());
@@ -154,35 +155,37 @@
 	if (isset($_FILES['xml']) && ($_FILES['xml']['error'] == UPLOAD_ERR_OK)) {
 	    $xml = simplexml_load_file($_FILES['xml']['tmp_name']);       
 	    $array = json_decode(json_encode($xml), TRUE);
-	    #upload_user($array['user']); 
-	    #upload_personalInfo($array['personalinfo']);
-	    #upload_security($array['security']);
+	    upload_user($array['user']); 
+	    upload_personalInfo($array['personalinfo']);
+	    upload_security($array['security']);
 	    foreach ($array['friends']['friend'] as $value) {
-	    	#upload_friends($value); //Not woring
+	    	upload_friends($value); 
 	    } 
 	    foreach ($array['blogs']['post'] as $value) {
-	    	#upload_posts($value); //Works
+	    	upload_posts($value); 
 	    }
 	    foreach ($array['photocollections']['photocollection'] as $value) {
-	    	#upload_photoc($value); #works
+	    	upload_photoc($value); 
 	    } 
 	    foreach ($array['photos']['photo'] as $value) {
-	    	#upload_photo($value); #works
+	    	upload_photo($value);
 	    }
 	    foreach ($array['photolikes']['likes'] as $value) {
-	    	#upload_photolikes($value); #works
+	    	upload_photolikes($value); 
 	    }
 	    foreach ($array['photocomments']['comments'] as $value) {
-	    	#upload_photocmnt($value); #works
+	    	upload_photocmnt($value);
 	    }
 	    foreach ($array['circles_admin']['circle'] as $value) {
-	    	#upload_circles($value); 
+	    	upload_circles($value); 
 	    }
 	    foreach ($array['circles_member']['circle'] as $value) {
-	    	#upload_circle_member($value); 
+	    	upload_circle_member($value); 
 	    }
 	    foreach ($array['circles_messages']['messages'] as $value) {
-	    	#upload_circle_messages($value); 
+	    	upload_circle_messages($value); 
 	    }        
 	}
+	header("location: profile.php");
+	exit();
 ?>
