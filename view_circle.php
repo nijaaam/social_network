@@ -119,7 +119,7 @@
                <div class="panel-body">
               
             <?php 
-                $query = "SELECT pi.userID, message, timeSent, firstName, surname FROM messagecircles as mc, personalinfo as pi WHERE pi.userID = mc.userID AND mc.circleID =".$circleId." ORDER BY timeSent DESC";  
+                $query = "SELECT pi.userID, message, timeSent, firstName, surname, messageId FROM messagecircles as mc, personalinfo as pi WHERE pi.userID = mc.userID AND mc.circleID =".$circleId." ORDER BY timeSent DESC";
                 $sql = mysql_query($query);
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
@@ -130,6 +130,7 @@
                     $timeSent = $row[2];
                     $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
                     $timeSent = $myDateTime->format('d/m/Y H:m');
+                    $postId = $row[5];
             ?> 
                  <div class="row">
                    <div class="col-sm-2">
@@ -140,7 +141,7 @@
                        <div class="pointer">
                          <p><?php echo $message ?></p>
                          <?php if($isCircleAdmin || $id == $userId || $isAdmin) { ?>
-                             <a href="functions.php?action=view&request=delete_message&id=<?php echo $profileUserId?>&postId=<?php echo $postId?>">
+                             <a href="functions.php?action=view&request=delete_message&id=<?php echo $circleId ?>&postId=<?php echo $postId?>">
                                  <button style="float:left" type="submit" name="deleteMessage" class="btn btn-danger">Delete</button>
                              </a>
                          <?php }?>

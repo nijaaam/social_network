@@ -274,6 +274,16 @@ if($_POST['delete_post'] != ""){
     exit;
 }
 
+if($request == "delete_message"){
+    $id = $_GET['id'];
+    $postId = $_GET['postId'];
+    $sql = "DELETE FROM messagecircles WHERE messageID = '$postId'";
+
+    $res = mysql_query($sql) or die(mysql_error());
+    header("Location: view_circle.php?action=view&id=".$id);
+    exit;
+}
+
 if($_POST['delete_collection'] != ""){
     $collectionId = $_POST['delete_collection'];
 
