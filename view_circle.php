@@ -22,9 +22,17 @@
     $res = mysql_query("SELECT circleID FROM circlememberships, users WHERE users.userID = ".$userId." AND circlememberships.userID = ".$userId." AND circleID=".$circleId) or die (mysql_error());
     $userRow=mysql_fetch_array($res);    
     // Checks if user is in this circle. If not redirects to circles.php
-    if(!$userRow['circleID']){
+    if(!$userRow['circleID'] && !$isAdmin){
         header("Location: circles.php");
         exit;
+    }
+
+    $isCircleAdmin = false;
+    $query = "SELECT adminUserId FROM circles WHERE circleID =".$circleId;
+    $sql = mysql_query($query);
+    $row = mysql_fetch_array($sql, MYSQL_NUM);
+    if($row[0] == $userId) {
+        $isCircleAdmin = true;
     }
 ?>
 
@@ -131,6 +139,11 @@
                      <div class="bubble">
                        <div class="pointer">
                          <p><?php echo $message ?></p>
+                         <?php if($isCircleAdmin || $id == $userId || $isAdmin) { ?>
+                             <a href="functions.php?action=view&request=delete_message&id=<?php echo $profileUserId?>&postId=<?php echo $postId?>">
+                                 <button style="float:left" type="submit" name="deleteMessage" class="btn btn-danger">Delete</button>
+                             </a>
+                         <?php }?>
                        </div>
                        <div class="pointer-border"></div>
                        <p class="post-actions" style="text-align:right"><a href="#"><?php echo $timeSent ?></a></p>
@@ -149,12 +162,8 @@
               <div class="panel-heading">
                 <h3 class="panel-title">Circle members</h3>
               </div>
-            <?php 
-                $query = "SELECT adminUserId FROM circles WHERE circleID =".$circleId;  
-                $sql = mysql_query($query);
-                $row = mysql_fetch_array($sql, MYSQL_NUM);
-                // If they are the admin of the circle
-                if($row[0] == $userId){
+            <?php
+                if($isCircleAdmin || $isAdmin){
             ?>
                   <div class="panel-body">
                     <form action="edit_friend_circle.php" method="post">
@@ -172,6 +181,7 @@
                 <?php
                 $query = "SELECT personalinfo.userID, firstName, surname FROM personalinfo JOIN circlememberships ON personalinfo.userID = circlememberships.userID WHERE circleID =".$circleId;  
                 $sql = mysql_query($query);
+                $i = 0;
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
                     $firstName = $row[1];
@@ -184,10 +194,14 @@
                               <img src="img/user.png" class="img-thumbnail" alt="">
                               <div class="text-center">
                                   <a href="view_profile.php?action=view&id=<?php echo $id?>"><?php echo $fullName ?></a>
+                                  <?php if($i == 0) { ?>
+                                      <p>(Admin)</p>
+                                  <?php } ?>
                               </div>
                             </div>
                         </li>
                 <?php
+                    $i += 1;
                 }  
                 ?>
                 </ul>

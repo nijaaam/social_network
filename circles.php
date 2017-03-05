@@ -84,9 +84,14 @@
           <div class="col-md-8">
             <div class="groups">
               <h1 class="page-header">Circles</h1>
-                <?php 
-                    $sql = mysql_query("SELECT circleID, name FROM circles WHERE circleID IN (SELECT circleID FROM `circlememberships` WHERE userID = '".$_SESSION['user']."')") or die (mysql_error());
-                    while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
+                <?php
+                    if(!$isAdmin) {
+                        $sql = mysql_query("SELECT circleID, name FROM circles WHERE circleID IN (SELECT circleID FROM `circlememberships` WHERE userID = '" . $_SESSION['user'] . "')") or die (mysql_error());
+                    } else {
+                        $sql = mysql_query("SELECT circleID, name FROM circles") or die (mysql_error());
+                    }
+
+                    while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
                         $circleId = $row[0];
                         $circleName = $row[1];
                 ?>
