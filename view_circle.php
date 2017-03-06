@@ -31,7 +31,8 @@
     $query = "SELECT adminUserId FROM circles WHERE circleID =".$circleId;
     $sql = mysql_query($query);
     $row = mysql_fetch_array($sql, MYSQL_NUM);
-    if($row[0] == $userId) {
+    $circleAdmin = $row[0];
+    if($circleAdmin == $userId) {
         $isCircleAdmin = true;
     }
 ?>
@@ -187,7 +188,6 @@
                 <?php
                 $query = "SELECT personalinfo.userID, firstName, surname FROM personalinfo JOIN circlememberships ON personalinfo.userID = circlememberships.userID WHERE circleID =".$circleId;  
                 $sql = mysql_query($query);
-                $i = 0;
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
                     $firstName = $row[1];
@@ -200,14 +200,13 @@
                               <img src="img/user.png" class="img-thumbnail" alt="">
                               <div class="text-center">
                                   <a href="view_profile.php?action=view&id=<?php echo $id?>"><?php echo $fullName ?></a>
-                                  <?php if($i == 0) { ?>
+                                  <?php if($circleAdmin == $id) { ?>
                                       <p>(Admin)</p>
                                   <?php } ?>
                               </div>
                             </div>
                         </li>
                 <?php
-                    $i += 1;
                 }  
                 ?>
                 </ul>
