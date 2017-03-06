@@ -21,19 +21,17 @@
                 }
                 else{
                     // friends of friends with search query.
-                    $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId') AND userID1 != '$userId') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND userID2 != '$userId')) AND (firstName LIKE '%$search_term%' OR surname LIKE '%$search_term%')";
+                    $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1')) AND (firstName LIKE '%$search_term%' OR surname LIKE '%$search_term%')";
                 }
             }
             else if($search_term == 0){
                 // friends of friends query from clicking on view friends.
-                // $query = $query."SELECT f1.userID2 FROM relationships AS f1 JOIN relationships AS f2 USING (userID2) WHERE f1.userID1 = '".$userId."' AND f2.userID1 = '".$mutualUserId."' AND f1.invitationAccepted = '1' AND f2.invitationAccepted = '1' )";
-                $query = "SELECT * FROM `personalinfo` WHERE `userID` != '".$userId."' AND `userID` IN (";
-                $query = $query."SELECT userID2 FROM relationships WHERE userID1 = '".$friendId."' AND invitationAccepted = '1' )";
+                $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 = '$friendId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 = '$friendId' AND invitationAccepted = '1')) AND userID != '$userId'";
             }
             else{
                 // Collaborative filtering method query goes here.
-                $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId') AND userID1 != '$userId') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND userID2 != '$userId'))";
-            }
+                $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1'))";
+                }
         
             $sql = mysql_query($query) or die (mysql_error());
             $num_of_row   = mysql_num_rows($sql);
