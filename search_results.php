@@ -32,7 +32,7 @@
             }
             else{
                 // Collaborative filtering method query goes here.
-                $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
+                $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId') AND userID1 != '$userId') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND userID2 != '$userId'))";
             }
         
             $sql = mysql_query($query) or die (mysql_error());
