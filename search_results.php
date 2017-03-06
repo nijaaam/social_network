@@ -21,7 +21,7 @@
                 }
                 else{
                     // friends of friends with search query.
-                    $query = "SELECT pi.* FROM personalinfo pi, relationships F, relationships F2 WHERE F.userID1 = F2.userID2 AND F2.userID1 NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND F.userID2 = '$userId' AND F2.userID1 != '$userId' AND F2.userID1 = pi.userID  AND (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') GROUP BY F2.userID1";
+                    $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId') AND userID1 != '$userId') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId') AND userID2 != '$userId')) AND (firstName LIKE '%$search_term%' OR surname LIKE '%$search_term%')";
                 }
             }
             else if($search_term == 0){
