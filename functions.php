@@ -284,6 +284,24 @@ if($request == "delete_message"){
     exit;
 }
 
+if($request == "delete_circle"){
+    $circleId = $_GET['circleId'];
+
+    $sql = "START TRANSACTION;";
+    $res = mysql_query($sql);
+    $sql = "DELETE FROM messagecircles WHERE circleId = '$circleId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "DELETE FROM circlememberships WHERE circleId = '$circleId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "DELETE FROM circles WHERE circleId = '$circleId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    $sql = "COMMIT";
+    $res = mysql_query($sql);
+
+    header("Location: circles.php");
+    exit;
+}
+
 if($_POST['delete_collection'] != ""){
     $collectionId = $_POST['delete_collection'];
 

@@ -173,6 +173,11 @@
                           <button type="submit" class="btn btn-primary" >Modify friend circle</button>
                         </div>
                     </form>
+                      <div style="text-align:center; margin-top:10px">
+                        <a href="functions.php?action=view&request=delete_circle&circleId=<?php echo $circleId ?>">
+                            <button type="submit" class="btn btn-danger">Delete circle</button>
+                        </a>
+                      </div>
                   </div>
             <?php
                 }

@@ -100,6 +100,11 @@
                             <h3>&nbsp;&nbsp;&nbsp;
                                 <a href="view_circle.php?action=view&id=<?php echo $circleId?>"><?php echo $circleName?></a>
                             </h3>
+                            <?php if($isAdmin) { ?>
+                                <a style="margin-left:2em" href="functions.php?action=view&request=delete_circle&circleId=<?php echo $circleId ?>">
+                                      <button type="submit" class="btn btn-danger">Delete circle (Administrator)</button>
+                                </a>
+                            <?php } ?>
                       </div>
                       <div class="clearfix"></div>
                 <?php
