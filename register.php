@@ -42,8 +42,8 @@ if ( isset($_POST['btn-signup']) ) {
 	if( !$error ) {
 		$query = "START TRANSACTION;";
 		$res = mysql_query($query);
-		$query = "INSERT INTO users(email,password,securityQuestion,securityAnswer) 
-		VALUES('$email','$password','$securityQuestion', '$securityAnswer');";
+		$query = "INSERT INTO users(email,password,securityQuestion,securityAnswer,isAdmin) 
+		VALUES('$email','$password','$securityQuestion', '$securityAnswer', FALSE);";
 		$res = mysql_query($query);
 		$query = "INSERT INTO personalinfo(userID, firstName, surname, gender, city, country, birthday) VALUES((SELECT userID from users WHERE email = '$email'),'$firstName','$surname','$gender','$city','$country','$birthday');";
 		$res = mysql_query($query);

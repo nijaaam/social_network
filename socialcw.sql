@@ -23,25 +23,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admins`
---
-
-CREATE TABLE IF NOT EXISTS `admins` (
-  `userID` int(11) NOT NULL,
-  PRIMARY KEY (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`userID`) VALUES
-(24),
-(25);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `blogposts`
 --
 
@@ -268,7 +249,7 @@ INSERT INTO `photolikes` (`photoID`, `userID`) VALUES
 CREATE TABLE IF NOT EXISTS `photos` (
   `photoID` int(11) NOT NULL AUTO_INCREMENT,
   `photoCollectionID` int(11) NOT NULL,
-  `image` blob NOT NULL,
+  `image` LONGBLOB NOT NULL,
   `name` varchar(240) NOT NULL,
   `caption` varchar(240) NOT NULL,
   `dateUploaded` datetime NOT NULL,
@@ -355,6 +336,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(240) NOT NULL,
   `securityQuestion` varchar(240) NOT NULL,
   `securityAnswer` varchar(240) NOT NULL,
+  `isAdmin` boolean NOT NULL,
   PRIMARY KEY (`userID`),
   UNIQUE KEY `userID` (`userID`),
   KEY `userID_2` (`userID`),
@@ -366,21 +348,15 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userID`, `email`, `password`, `securityQuestion`, `securityAnswer`) VALUES
-(24, 'osman@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'I done'),
-(25, 'bagus@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Life'),
-(26, 'shivam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Bandi'),
-(27, 'nijam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Word');
+INSERT INTO `users` (`userID`, `email`, `password`, `securityQuestion`, `securityAnswer`, `isAdmin`) VALUES
+(24, 'osman@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'I done', TRUE),
+(25, 'bagus@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Life',  TRUE),
+(26, 'shivam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Bandi',  FALSE),
+(27, 'nijam@gmail.com', '14f8f4bb8c0e79a02670a5fea5682da717a5b3d3dc7b1706f7a4bab9afae18c2', '', 'Word',  FALSE);
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `admins`
---
-ALTER TABLE `admins`
-  ADD CONSTRAINT `admins_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 
 --
 -- Constraints for table `personalinfo`

@@ -55,13 +55,13 @@ if($request == "change_privacy"){
 
 if($request == "remove_admin"){
     $userId = $_GET['id'];
-    mysql_query("DELETE FROM admins WHERE userID = '$userId'") or die(mysql_error());;
+    mysql_query("UPDATE users SET isAdmin = FALSE WHERE userId = '$userId'") or die(mysql_error());;
     header("Location: view_profile.php?action=view&id=$userId");
 }
 
 if($request == "make_admin"){
     $userId = $_GET['id'];
-    mysql_query("INSERT INTO admins VALUES('$userId')") or die(mysql_error());;
+    mysql_query("UPDATE users SET isAdmin = TRUE WHERE userId = '$userId'") or die(mysql_error());;
     header("Location: view_profile.php?action=view&id=$userId");
 }
 
@@ -409,10 +409,6 @@ if($_POST['delete_user'] != ""){
 
     //delete all the circels where they are the admin
     $sql = "DELETE FROM circles WHERE adminUserID = '$userProfileId'";
-    $res = mysql_query($sql) or die(mysql_error());
-
-    //delete from the admin table if they are an admin
-    $sql = "DELETE FROM admins WHERE userID = '$userProfileId'";
     $res = mysql_query($sql) or die(mysql_error());
 
     //delete from the user table

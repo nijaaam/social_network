@@ -382,8 +382,9 @@
                   $visiblePersonalInfo = $adminRow['visiblePersonalInfo'];
                   // By default values are equal to 0 which means everyone has these visibility privileges.
 
-                  $res = mysql_query("SELECT userID FROM admins WHERE admins.userID='$profileUserId'") or die(mysql_error());
-                  $isUserAdmin = mysql_num_rows($res);
+                  $res = mysql_query("SELECT isAdmin FROM users WHERE userID='$profileUserId'") or die(mysql_error());
+                  $row = mysql_fetch_array($res, MYSQL_NUM);
+                  $isUserAdmin = $row[0];
                   ?>
 
                   <div class="panel-body">
