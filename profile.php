@@ -125,7 +125,7 @@
                 </div>
                 <div class="col-md-8">
                   <ul>
-                      <div id="profile_static">
+                      <div id="profile_static" <?php if(isset($error)){ echo "style=\"display: none\"" ;} ?>>
                         <li><strong>Name: </strong><span id="fullName"><?php echo $fullName ;?></span></li>
                         <li><strong>Email: </strong><span id="fullName"><?php echo $userRow['email'];?></span></li>
                         <li><strong>City: </strong><span id="fullName"><?php echo $userRow['city'];?></span></li>
@@ -135,11 +135,11 @@
                                         $myDateTime = DateTime::createFromFormat('Y-m-d', $userRow['birthday']);
                                         echo $myDateTime->format('d M Y'); ?></li>
                       </div>
-                      <form id="profile_form" style="display: none" name="editForm" method="POST">
+                      <form id="profile_form" <?php if(!isset($error)){ echo "style=\"display: none\"" ;} ?> name="editForm" method="POST">
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                  <input type="text" name="firstName" class="form-control" placeholder="First name" maxlength="50" value="<?php echo $userRow['firstName'] ?>" />
+                                  <input type="text" name="firstName" class="form-control" placeholder="First name" maxlength="50" value="<?php if(isset($error)){ echo $firstName ;} else{ echo $userRow['firstName']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $firstNameError; ?></span>
                           </div>
@@ -147,7 +147,7 @@
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                  <input type="text" name="surname" class="form-control" placeholder="Surname" maxlength="50" value="<?php echo $userRow['surname'] ?>" />
+                                  <input type="text" name="surname" class="form-control" placeholder="Surname" maxlength="50" value="<?php if(isset($error)){ echo $surname ;} else{ echo $userRow['surname']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $surnameError; ?></span>
                           </div>
@@ -155,7 +155,7 @@
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                  <input type="email" name="email" class="form-control" placeholder="Email" maxlength="40" value="<?php echo $userRow['email'] ?>" />
+                                  <input type="email" name="email" class="form-control" placeholder="Email" maxlength="40" value="<?php if(isset($error)){ echo $email_new ;} else{ echo $userRow['email']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $emailError; ?></span>
                           </div>
@@ -163,7 +163,7 @@
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon"></span></span>
-                                  <input type="text" name="city" class="form-control" placeholder="City" maxlength="50" value="<?php echo $userRow['city'] ?>" />
+                                  <input type="text" name="city" class="form-control" placeholder="City" maxlength="50" value="<?php if(isset($error)){ echo $city ;} else{ echo $userRow['city']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $cityError; ?></span>
                           </div>
@@ -171,7 +171,7 @@
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon"></span></span>
-                                  <input type="text" name="country" class="form-control" placeholder="Country" maxlength="50" value="<?php echo $userRow['country'] ?>" />
+                                  <input type="text" name="country" class="form-control" placeholder="Country" maxlength="50" value="<?php if(isset($error)){ echo $country ;} else{ echo $userRow['country']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $countryError; ?></span>
                           </div>
@@ -191,7 +191,7 @@
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><span class="glyphicon"></span></span>
-                                  <input type="date" name="birthday" class="form-control" placeholder="Birthday (yyyy-mm-dd)" maxlength="50" value="<?php echo $userRow['birthday'] ?>" />
+                                  <input type="date" name="birthday" class="form-control" placeholder="Birthday (yyyy-mm-dd)" maxlength="50" value="<?php if(isset($error)){ echo $birthday ;} else{ echo $userRow['birthday']; }?>" />
                               </div>
                               <span class="text-danger"><?php echo $birthdayError; ?></span>
                           </div>
