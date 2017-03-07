@@ -47,7 +47,7 @@ if ( isset($_POST['btn-signup']) ) {
 		$res = mysql_query($query);
 		$query = "INSERT INTO personalinfo(userID, firstName, surname, gender, city, country, birthday) VALUES((SELECT userID from users WHERE email = '$email'),'$firstName','$surname','$gender','$city','$country','$birthday');";
 		$res = mysql_query($query);
-		$query = "INSERT INTO securitysettings(userID) VALUES ((SELECT userID from users WHERE email = '$email'));";
+		$query = "INSERT INTO securitysettings(userID, whoCanSeeBlog, whoCanSeeProfile, whoCanSendFriendRequests, visibleName, visiblePersonalInfo) VALUES ((SELECT userID from users WHERE email = '$email'), 1, 1, 0, 0, 0);";
 		$res = mysql_query($query);
 
 		$query = "COMMIT;";            
@@ -60,6 +60,8 @@ if ( isset($_POST['btn-signup']) ) {
 			unset($name);
 			unset($email);
 			unset($pass);
+
+			header("Location: index.php");
 		} else {
 			$errTyp = "danger";
 			$errMSG = "Something went wrong, try again later...";	
