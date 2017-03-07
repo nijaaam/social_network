@@ -12,6 +12,10 @@ if ( isset($_SESSION['user'])!="" ) {
 
 $error = false;
 
+if( isset($_GET['email'])){
+	$email = $_GET['email'];
+}
+
 if( isset($_POST['btn-login']) ) {	
 	
 		// prevent sql injections/ clear user invalid inputs

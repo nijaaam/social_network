@@ -85,7 +85,6 @@ if( isset($_POST['btn_submit_email']) ) {
 					unset($password);
 					unset($emailAccepted);
 					unset($securityAnswer);
-					unset($email);
 				} else {
 					$errTyp = "danger";
 					$errMSG = "Something went wrong, try again later...";	
@@ -130,10 +129,14 @@ if( isset($_POST['btn_submit_email']) ) {
 								<span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
 							</div>
 						</div>
+						<div class="form-group" <?php if($errTyp=="danger"){ echo "hidden";} ?> >
+							<a href="index.php?email=<?php echo "$email"; ?>" class="btn btn-primary btn-block">Sign in</a>
+						</div>
 						<?php
 					}
 					?>
 
+					<div <?php if(isset($errMSG)){ echo "hidden";} ?>>
 					<div class="form-group">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
@@ -189,6 +192,7 @@ if( isset($_POST['btn_submit_email']) ) {
 
 					<div class="form-group">
 						<a href="index.php">Sign in Here...</a>
+					</div>
 					</div>
 
 				</div>

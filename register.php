@@ -11,7 +11,7 @@ $error = false;
 
 if ( isset($_POST['btn-signup']) ) {
 
-		// clean user inputs to prevent sql injections
+	// clean user inputs to prevent sql injections
 	$firstName = clean_data('firstName');
 	$surname = clean_data('surname');
 	$email = clean_data('email');
@@ -58,10 +58,8 @@ if ( isset($_POST['btn-signup']) ) {
 			$errTyp = "success";
 			$errMSG = "Successfully registered, you may login now";
 			unset($name);
-			unset($email);
 			unset($pass);
 
-			header("Location: index.php");
 		} else {
 			$errTyp = "danger";
 			$errMSG = "Something went wrong, try again later...";	
@@ -107,10 +105,17 @@ else{
 								<span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
 							</div>
 						</div>
+						<div class="form-group" <?php if($errTyp=="danger"){ echo "hidden";} ?> >
+							<a href="index.php?email=<?php echo "$email"; ?>" class="btn btn-primary btn-block">Sign in</a>
+						</div>
+						<div class="form-group" <?php if($errTyp=="danger"){ echo "hidden";} ?> >
+							<a href="register.php" class="btn btn-primary btn-block">Create Account</a>
+						</div>
 						<?php
 					}
 					?>
 
+					<div <?php if(isset($errMSG)){ echo "hidden";} ?>>
 					<div class="form-group">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -222,6 +227,7 @@ else{
 
 					<div class="form-group">
 						<a href="index.php">Sign in Here...</a>
+					</div>
 					</div>
 
 				</div>

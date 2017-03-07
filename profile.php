@@ -423,7 +423,7 @@
         });
 
         function confirm_delete(){
-            if(confirm("This action will delete the user's photo collections, blog posts and circles which they are an administor in.\n\nAre you sure you want to delete this User?")){
+            if(confirm("This action will delete all your photo collections, blog posts and circles which you are an administor in.\n\nAre you sure you want to delete your account?")){
                 return true;
             }
             return false;
