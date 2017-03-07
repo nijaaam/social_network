@@ -418,7 +418,11 @@ if($_POST['delete_user'] != ""){
     $sql = "COMMIT";
     $res = mysql_query($sql);
 
-    header("Location: friends.php");
+    if($userId == $userProfileId) {
+        header("Location: logout.php?logout");
+    } else {
+        header("Location: friends.php");
+    }
     exit;
 }
 ?>
