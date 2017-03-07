@@ -29,9 +29,16 @@ $header = "Search results";
 if($_GET['header'] != ""){
     $header = $_GET['header'];
 }
-else if($_POST['search_friends'] != ""){
+else if(isset($_POST['search_friend_blogs'])){
+    $searchQuery = $_POST['search_friend_blogs'];
+    $header = "Search friend blogs: '".$searchQuery."'";
+}
+else if(isset($_POST['search_friends'])){
     $searchQuery = $_POST['search_friends'];
     $header = "Search results for: '".$searchQuery."'";
+    if($_POST['friends_of_friends']){
+        $header = "Friends of friends: '$searchQuery'";
+    }
 }
 else if(empty($_GET) && empty($_POST)){
     $header = "Suggested friends";
