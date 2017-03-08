@@ -242,6 +242,27 @@ if($_POST['add_photo_collection'] != ""){
     }
 }
 
+if(isset($_POST['profile_pic'])){
+
+   $count = count($_FILES['img']['name']);
+   $sql = "START TRANSACTION;";
+   $res = mysql_query($sql);
+
+   for ($i = 0; $i < $count; $i++){
+    $name = $_FILES["img"]["name"][$i];
+    $imageBlob = addslashes(file_get_contents($_FILES['img']['tmp_name'][$i]));
+    $caption = "caption";
+    $sql = "UPDATE personalinfo SET picture='$imageBlob' WHERE userID='$userId'";
+    $res = mysql_query($sql) or die(mysql_error());
+    }   
+
+    $sql = "COMMIT;";            
+    $res = mysql_query($sql) or die(mysql_error());
+
+    header("Location: profile.php");
+    exit;
+}
+
 if($_POST['like_photo_action'] != ""){
     $photoId = $_POST['photoId'];
     $sql = "";

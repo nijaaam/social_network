@@ -120,7 +120,7 @@
                <div class="panel-body">
               
             <?php 
-                $query = "SELECT pi.userID, message, timeSent, firstName, surname, messageId FROM messagecircles as mc, personalinfo as pi WHERE pi.userID = mc.userID AND mc.circleID =".$circleId." ORDER BY timeSent DESC";
+                $query = "SELECT pi.userID, message, timeSent, firstName, surname, messageId, picture FROM messagecircles as mc, personalinfo as pi WHERE pi.userID = mc.userID AND mc.circleID =".$circleId." ORDER BY timeSent DESC";
                 $sql = mysql_query($query);
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
@@ -132,10 +132,15 @@
                     $myDateTime = DateTime::createFromFormat('Y-m-d H:m:s', $timeSent);
                     $timeSent = $myDateTime->format('d/m/Y H:m');
                     $postId = $row[5];
+                    $content = base64_encode($row[6]);
+                    $image = "data:image/jpeg;base64,". $content;
+                    if($content == ""){
+                      $image = "img/user.png";
+                    }
             ?> 
                  <div class="row">
                    <div class="col-sm-2">
-                     <a href="view_profile.php?action=view&id=<?php echo $id?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
+                     <a href="view_profile.php?action=view&id=<?php echo $id?>" class="post-avatar thumbnail"><img src="<?php echo "$image"; ?>" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
                    </div>
                    <div class="col-sm-10">
                      <div class="bubble">
@@ -186,18 +191,23 @@
                 
               <div class="panel-body">
                 <?php
-                $query = "SELECT personalinfo.userID, firstName, surname FROM personalinfo JOIN circlememberships ON personalinfo.userID = circlememberships.userID WHERE circleID =".$circleId;  
+                $query = "SELECT personalinfo.userID, firstName, surname, picture FROM personalinfo JOIN circlememberships ON personalinfo.userID = circlememberships.userID WHERE circleID =".$circleId;  
                 $sql = mysql_query($query);
                 while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                     $id = $row[0];
                     $firstName = $row[1];
                     $surname = $row[2];
                     $fullName = $firstName." ".$surname;
+                    $content = base64_encode($row[3]);
+                    $image = "data:image/jpeg;base64,". $content;
+                    if($content == ""){
+                      $image = "img/user.png";
+                    }
                 ?>
                     <ul>
                         <li>
                             <div style="width: 50px;margin: 0 auto;">
-                              <img src="img/user.png" class="img-thumbnail" alt="">
+                              <img src="<?php echo "$image"; ?>" class="img-thumbnail" alt="">
                               <div class="text-center">
                                   <a href="view_profile.php?action=view&id=<?php echo $id?>"><?php echo $fullName ?></a>
                                   <?php if($circleAdmin == $id) { ?>

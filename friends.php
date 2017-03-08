@@ -102,13 +102,19 @@
                     $result = array_unique($friends);
                     foreach ($result as $val) {
                         $id = $val;
-                        $name = mysql_query("SELECT CONCAT(firstName,' ', surname) from personalinfo WHERE userID = $id");
-                        $fullName = mysql_fetch_array($name)[0];
+                        $name = mysql_query("SELECT CONCAT(firstName,' ', surname), picture from personalinfo WHERE userID = $id");
+                        $row = mysql_fetch_array($name);
+                        $fullName = $row[0];
+                        $content = base64_encode($row[1]);
+                        $image = "data:image/jpeg;base64,". $content;
+                        if($content == ""){
+                          $image = "img/user.png";
+                        }
                         $headerName = $fullName . "'s Friends";
                         ?>
                         <div class="row member-row">
                           <div class="col-md-3">
-                            <img src="img/user.png" class="img-thumbnail" alt="">
+                            <img src="<?php echo "$image"; ?>" class="img-thumbnail" alt="">
                             <div class="text-center"><?php echo $fullName ?></div>
                           </div>
                           <div class="col-md-3">

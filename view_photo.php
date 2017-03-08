@@ -191,7 +191,7 @@
                     <div class="panel-body">
               
                     <?php 
-                        $query = "SELECT comment, dateTime, u.userID, firstName, surname, commentID FROM photocomments as p, users as u, personalinfo as pi WHERE photoID ='".$photoId."' AND u.userID = p.userID AND p.userID = pi.userID ORDER BY dateTime ASC";  
+                        $query = "SELECT comment, dateTime, u.userID, firstName, surname, commentID, picture FROM photocomments as p, users as u, personalinfo as pi WHERE photoID ='".$photoId."' AND u.userID = p.userID AND p.userID = pi.userID ORDER BY dateTime ASC";  
                         $sql = mysql_query($query);
                         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) { 
                             $comment = $row[0];
@@ -201,10 +201,15 @@
                             $myDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $timeSent);
                             $timeSent = $myDateTime->format('d/m/Y H:i:s');
                             $commentID = $row[5];
+                            $content = base64_encode($row[6]);
+                            $image = "data:image/jpeg;base64,". $content;
+                            if($content == ""){
+                              $image = "img/user.png";
+                            }
                     ?> 
                          <div class="row">
                            <div class="col-sm-2">
-                             <a href="view_profile.php?action=view&id=<?php echo $commentUserId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
+                             <a href="view_profile.php?action=view&id=<?php echo $commentUserId?>" class="post-avatar thumbnail"><img src="<?php echo "$image"; ?>" alt=""><div class="text-center"><?php echo $fullName ?></div></a>
                            </div>
                            <div class="col-sm-10">
                              <div class="bubble">

@@ -41,11 +41,15 @@ function search_members($search_term, $friendId, $filterFriendsOfFriends){
       $firstName = $row['firstName'];
       $surname = $row['surname'];
       $headerName =  $firstName." ".$surname."'s Friends";
-
+      $content = base64_encode($row['picture']);
+      $image = "data:image/jpeg;base64,". $content;
+      if($content == ""){
+        $image = "img/user.png";
+      }
       ?>
       <div class="row member-row">
         <div class="col-md-3">
-          <img src="img/user.png" class="img-thumbnail" alt="">
+          <img src="<?php echo "$image"; ?>" class="img-thumbnail" alt="">
           <div class="text-center">
             <?php echo $firstName." ".$surname ?>
           </div>

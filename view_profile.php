@@ -145,15 +145,20 @@
                 $canSeeProfile = $row['whoCanSeeProfile'] == 0 || ($row['whoCanSeeProfile'] == 1 && $isFriends || $isAdmin);
                 if($canSeeProfile) {
                     $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$profileUserId' AND users.userID = '$profileUserId'";
-                    $profileFullName = $userRow['firstName'] . " " . $userRow['surname'];
                     $res = mysql_query($query) or die(mysql_error());
                     $userRow = mysql_fetch_array($res);
+                    $profileFullName = $userRow['firstName'] . " " . $userRow['surname'];
+                    $content = base64_encode($userRow['picture']);
+                    $image = "data:image/jpeg;base64,". $content;
+                    if($content == ""){
+                      $image = "img/user.png";
+                    }
                 ?>
 
                     <h1 class="page-header"><?php echo $profileFullName ?></h1>
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="img/user.png" class="img-thumbnail" alt="">
+                            <img src="<?php echo "$image"; ?>"class="img-thumbnail" alt="">
                         </div>
 
                         <div class="col-md-8">
@@ -308,7 +313,7 @@
                     ?> 
                          <div class="row">
                            <div class="col-sm-2">
-                             <a href="view_profile.php?action=view&id=<?php echo $profileUserId?>" class="post-avatar thumbnail"><img src="img/user.png" alt=""><div class="text-center"><?php echo $profileFullName ?></div></a>
+                             <a href="view_profile.php?action=view&id=<?php echo $profileUserId?>" class="post-avatar thumbnail"><img src="<?php echo "$image"; ?>" alt=""><div class="text-center"><?php echo $profileFullName ?></div></a>
                            </div>
                            <div class="col-sm-10">
                              <div class="bubble">
