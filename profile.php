@@ -66,6 +66,7 @@ if ( isset($_POST['edit-submit']) ) {
 
           <!-- Custom styles for this template -->
           <link href="css/style.css" rel="stylesheet">
+          <link href="style.css" rel="stylesheet">
           <link href="css/font-awesome.css" rel="stylesheet">
         </head>
 
@@ -139,9 +140,9 @@ if ( isset($_POST['edit-submit']) ) {
                           </div>
                         
 
-                        <div hidden id="upload_pic_form" style="border-style: ridge; width:250px; height:300px; text-align: center;">
+                        <div hidden id="upload_pic_form" class="chage_picture_hidden">
                           <form name="change_profile_pic" action="functions.php" method="post" enctype="multipart/form-data">
-                           
+                           <h5 style="color:#337ab7; padding-bottom: 15px">Upload a new profile picture</h5>
                               <div class="form-group">
                                 <input type="hidden" name="profile_pic" value="profile_pic"/>
                                 <input id="chooser" style="padding: 7px; width:220px;" type="file" multiple="multiple" name="img[]" />
@@ -466,12 +467,11 @@ if ( isset($_POST['edit-submit']) ) {
     }
 
     $("#pic_button").click(function() {
-    // creating input on-the-fly
-    $("#change_pic").hide();
-    $("#picture").hide();
-    $("#upload_pic_form").show();
-    $('#chooser').trigger('click');
-    return;
+      $("#change_pic").hide();
+      $("#picture").hide();
+      $("#upload_pic_form").attr("class", "change_picture_show");
+      $('#chooser').trigger('click');
+      return;
   });
 
 </script>
@@ -492,7 +492,7 @@ if ( isset($_POST['edit-submit']) ) {
     console.log("here");
     $("#change_pic").show();
     $("#picture").show();
-    $("#upload_pic_form").hide();
+    $("#upload_pic_form").attr("class","change_picture_hide");
   }
 
   function validateImage(){
