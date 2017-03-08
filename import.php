@@ -11,14 +11,16 @@
 	}
 
 	function upload_user($arr){
-		$userID = clean_data($arr,'userID');
-		$email = clean_data($arr,'email');
-		$pass = clean_data($arr,'password');
-		$q = clean_data($arr,'securityQuestion');
-		$a = clean_data($arr,'securityAnswer');
-		$query = "INSERT INTO users VALUES('$userID','$email','$pass','$q','$a')
+		$keys = array_keys($arr);
+		$userID = $arr[$keys[0]];
+		$email = $arr[$keys[1]];
+		$pass = $arr[$keys[2]];
+		$q = $arr[$keys[3]];
+		$a = $arr[$keys[4]];
+		$admin = $arr[$keys[5]];
+		$query = "INSERT INTO users VALUES('$userID','$email','$pass','$q','$a','$admin')
 		ON DUPLICATE KEY UPDATE 
-		email = '$email', password = '$pass', securityQuestion = '$q', securityAnswer = '$a'";
+		email = '$email', password = '$pass', securityQuestion = '$q', securityAnswer = '$a' , isAdmin = '$admin'";
 		mysql_query($query) or die(mysql_error());
 	}
 
