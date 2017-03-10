@@ -14,7 +14,11 @@ function get_xml($query, $name)
     for ($i = 0; $i < $numberfields; $i++) {
         $var = mysql_field_name($result, $i);
         $xml .= "\t<$var>";
-        $xml .= $arr[$i];
+        if ($var == "picture"){
+            $xml .= base64_encode($arr[$i]);
+        }else{
+            $xml .= $arr[$i];
+        }
         $xml .= "</$var>\n";
     }
     $xml .= "</$name>\n";
@@ -32,8 +36,8 @@ function get_xml2($query, $name, $name2)
         for ($i = 0; $i < $numberfields; $i++) {
             $var = mysql_field_name($result, $i);
             $xml .= "\t<$var>";
-            if ($var == "image"){
-              $xml .= base64_encode($arr[$i]);
+            if ($var == "image" || $var == "picture" ){
+                $xml .= base64_encode($arr[$i]);
             }else {
               $xml .= $arr[$i];
             }

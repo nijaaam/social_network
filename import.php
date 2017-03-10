@@ -33,9 +33,10 @@
 		$dob = $arr[$keys[4]];
 		$city = $arr[$keys[5]];
 		$country = $arr[$keys[6]];
-		$query = "INSERT INTO personalinfo VALUES('$id','$fn','$sn','$gen','$dob','$city','$country')
+		$picture = mysql_real_escape_string(base64_decode($arr[$keys[7]]));
+		$query = "INSERT INTO personalinfo VALUES('$id','$fn','$sn','$gen','$dob','$city','$country','$picture')
 		ON DUPLICATE KEY UPDATE 
-		firstName = '$fn', surname = '$sn', gender = '$gen', birthday = '$dob', city = '$city', country = '$country'";
+		firstName = '$fn', surname = '$sn', gender = '$gen', birthday = '$dob', city = '$city', country = '$country', picture = '$picture'";
 		mysql_query($query) or die(mysql_error());
 	}
 
