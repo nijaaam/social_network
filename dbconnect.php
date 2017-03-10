@@ -3,10 +3,10 @@
 	// this will avoid mysql_connect() deprecation error.
 	error_reporting( ~E_DEPRECATED & ~E_NOTICE );
 	// but I strongly suggest you to use PDO or MySQLi.
-	
-	define('DBHOST', 'localhost');
-	define('DBUSER', 'root');
-	define('DBPASS', '123');
+
+    define('DBHOST', 'us-cdbr-azure-southcentral-f.cloudapp.net');
+    define('DBUSER', 'b9dee02f541f7c');
+    define('DBPASS', '70d033d3');
 	define('DBNAME', 'socialcw');
 	
 	$conn = mysql_connect(DBHOST,DBUSER,DBPASS);
@@ -23,4 +23,3 @@
 	if ( !$dbcon ) {
 		die("Database Connection failed : " . mysql_error());
 	}
-?>
