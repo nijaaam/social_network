@@ -3,6 +3,7 @@
 ob_start();
 session_start();
 require_once 'dbconnect.php';
+include_once 'validation_functions.php';
 
     // if session is not set this will redirect to login page
 if( !isset($_SESSION['user']) ) {
@@ -19,7 +20,7 @@ require_once "check_admin.php";
 
 $header = "";
 if($_POST['photo_collection_title'] != ""){
-  $header = $_POST['photo_collection_title'];
+  $header = clean_data('photo_collection_title');
 }
 ?>
 

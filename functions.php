@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 require_once 'dbconnect.php';
+include_once 'validation_functions.php';
 
 $userId = $_SESSION['user'];
 $request = $_GET['request'];
@@ -98,7 +99,7 @@ if($_POST['add_friend_circle']){
         }
     }
         // Comma delimited string
-    $circleName = $_POST['header'];
+    $circleName = clean_data('header');
 
     $sql = "START TRANSACTION;";
     $res = mysql_query($sql);
@@ -164,7 +165,7 @@ if($_POST['modify_friend_circle']){
 }
 
 if($_POST['send_message_circle'] != ""){
-    $message = $_POST['send_message_circle'];
+    $message = clean_data('send_message_circle');
     $circleID = $_POST['circleID'];
 
     $sql = "INSERT INTO messagecircles (circleID, userID, message, timeSent) VALUES ('$circleID', '$userId', '$message', now())";
@@ -174,8 +175,7 @@ if($_POST['send_message_circle'] != ""){
 }
 
 if($_POST['post_blog'] != ""){
-    $blogPost = $_POST['post_blog'];
-
+    $blogPost = clean_data('post_blog');
     $sql = "INSERT INTO blogposts (userID, blogPostBody, dateTime) VALUES ('$userId', '$blogPost', now())";
     mysql_query($sql) or die(mysql_error());
     header("Location: profile.php");
@@ -183,7 +183,7 @@ if($_POST['post_blog'] != ""){
 }
 
 if($_POST['post_photo_comment'] != ""){
-    $photoComment = $_POST['post_photo_comment'];
+    $photoComment = clean_data('post_photo_comment');
     $photoId = $_POST['photoId'];
 
     $sql = "INSERT INTO photocomments (photoID, userID, comment, dateTime) VALUES ('$photoId', '$userId', '$photoComment', now())";
@@ -195,7 +195,7 @@ if($_POST['post_photo_comment'] != ""){
 if($_POST['new_photo_collection'] != ""){
     if (isset($_POST['upload'])) {
         $count = count($_FILES['img']['name']);
-        $collectionName = $_POST['new_photo_collection'];
+        $collectionName = clean_data('new_photo_collection');
         $sql = "START TRANSACTION;";
         $res = mysql_query($sql);
         $sql = "INSERT INTO photoCollections(userID,name,whoCanSee) VALUES('$userId','$collectionName',0);";

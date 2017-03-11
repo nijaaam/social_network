@@ -135,7 +135,7 @@ if ( isset($_POST['edit-submit']) ) {
                            <img src="<?php echo $image?>" class="img-thumbnail" alt="">
                          </div>
                          <div id="change_pic" class="form-group">
-                          <button id="pic_button" name="pic_button" class="btn btn-default" style="margin-bottom: 10px;">
+                          <button id="pic_button" name="pic_button" class="btn btn-default btn-block" style="margin-bottom: 10px;">
                             Change Profile Picture</button>
                           </div>
                         

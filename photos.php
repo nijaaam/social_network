@@ -225,6 +225,10 @@ require_once 'check_admin.php';
             alert("Photo collection must be given a name.");
             return false;
         }
+        if(a.length > 20){
+            alert("The name of the photo collection must be less than 20 characters");
+            return false;
+        }
     }
 
     function confirm_delete(){

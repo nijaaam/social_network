@@ -3,6 +3,7 @@
     ob_start();
     session_start();
     require_once 'dbconnect.php';
+    include_once 'validation_functions.php';
 
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -19,7 +20,7 @@
 
     $header = "";
     if($_POST['friend_circle_title'] != ""){
-        $header = $_POST['friend_circle_title'];
+        $header = clean_data('friend_circle_title');
     }
 
     $modifyCircleId = "";

@@ -3,8 +3,9 @@
 	// clean user inputs 
 	function clean_data($name){
 		$value = trim($_POST[$name]);
-		$value = strip_tags($value);
 		$value = htmlspecialchars($value);
+		$value = strip_tags($value);
+
 		return $value;
 	}
 

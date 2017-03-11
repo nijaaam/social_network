@@ -3,6 +3,7 @@
 ob_start();
 session_start();
 require_once 'dbconnect.php';
+include_once 'validation_functions.php';
 include("search_results.php");
 function array_key_unique($arr, $key) {
     $uniquekeys = array();
@@ -30,11 +31,11 @@ if($_GET['header'] != ""){
     $header = $_GET['header'];
 }
 else if(isset($_POST['search_friend_blogs'])){
-    $searchQuery = $_POST['search_friend_blogs'];
+    $searchQuery = clean_data('search_friend_blogs');
     $header = "Search friend blogs: '".$searchQuery."'";
 }
 else if(isset($_POST['search_friends'])){
-    $searchQuery = $_POST['search_friends'];
+    $searchQuery = clean_data('search_friends');
     $header = "Search results for: '".$searchQuery."'";
     if($_POST['friends_of_friends']){
         $header = "Friends of friends: '$searchQuery'";
