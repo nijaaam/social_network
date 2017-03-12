@@ -139,7 +139,7 @@
                                       $_SESSION['image'] = $image;
                                       $_SESSION['photoId'] = $photoId;
                                       $_SESSION['photoAdminId'] = $photoCollectionAdminId;
-                                      $_SESSION['photoCollectionId'] = $photoCollectionAdminId;
+                                      $_SESSION['photoCollectionId'] = $photoCollectionId;
                                     ?>  
                                     <button type="submit" class="btn btn-primary"><?php echo $likeAction?></button>
                                 </form>
@@ -182,7 +182,8 @@
                                 $_SESSION['image'] = $image;
                                 $_SESSION['photoId'] = $photoId;
                                 $_SESSION['photoAdminId'] = $photoCollectionAdminId;
-                                $_SESSION['photoCollectionId'] = $photoCollectionAdminId;
+                                $_SESSION['photoCollectionId'] = $photoCollectionId;
+                                $_SESSION['canPhotoComment'] = $canComment;
                               ?>
                           </div>
                           <button type="submit" class="btn btn-default">Post</button>

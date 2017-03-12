@@ -267,7 +267,7 @@ if ( isset($_POST['edit-submit']) ) {
                           <div class="col-md-12">
                             <div class="panel panel-default">
                               <div class="panel-heading">
-                                <h3 class="panel-title">Blog Wall</h3>
+                                <h3 class="panel-title">Blog</h3>
                               </div>
                               <div class="panel-body">
                                 <form name="blogPostForm" action="functions.php" method="post" onsubmit="return validateInput()">
@@ -459,7 +459,7 @@ if ( isset($_POST['edit-submit']) ) {
     });
 
      function confirm_delete(){
-      if(confirm("This action will delete all your photo collections, blog posts and circles which you are an administor\nAre you sure you want to delete your account?")){
+      if(confirm("This action will delete all your photo collections, blog posts and circles which you are an administor in.\nAre you sure you want to delete your account?")){
         return true;
       }
       return false;

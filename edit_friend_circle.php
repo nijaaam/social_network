@@ -27,6 +27,15 @@
     $existingMembers = array();
     if($_POST['modify_friend_circle']){
         $modifyCircleId = $_POST['modify_friend_circle'];
+        //authenticate user
+        $sql = "SELECT adminUserId FROM circles WHERE circleID = '$modifyCircleId'";
+        $res = mysql_query($sql);
+        $row=mysql_fetch_array($res);
+        $id = $row[0];
+        if(!$isAdmin && $id!=$userId){
+          header("Location: index.php");
+          exit;
+        }
         $header = "Add or remove friends from circle";
         $sql = mysql_query("SELECT userID FROM circlememberships WHERE circleID =".$modifyCircleId);  
         while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
@@ -145,8 +154,8 @@
                     if($modifyCircleId){
                         $_SESSION['existingMembers'] = $existingMembers;
                     ?>     
-                        <input type="hidden" name="circleId" value="<?php echo $modifyCircleId ?>"/>
-                        <input type="hidden" name="modify_friend_circle" value="submit"/>                            
+                        <input type="hidden" name="circleId" value="<?php echo $modifyCircleId ?>"/> 
+                        <input type="hidden" name="modify_friend_circle" value="submit"/>                         
                     <?php
                     }
                     else{

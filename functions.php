@@ -192,48 +192,77 @@ if($_POST['add_friend_circle']){
 }
 
 if($_POST['modify_friend_circle']){
+
     $circleId = $_POST['circleId'];
-    $checkedIds;
-    foreach($_POST as $key=>$value) {
-        if($key != "circleId" && $key != "modify_friend_circle")
-            $checkedIds[] = $value;
-    }
 
-    $existingMembers = $_SESSION['existingMembers'];
-
-    $newMembers = array_diff($checkedIds, $existingMembers);
-
-    $removedMembers = array();
-    foreach($existingMembers as $member){
-        if(!in_array($member, $checkedIds) && $member != $userId)
-            $removedMembers[] = $member;
-    }
-    $removedMembers = implode(", ", $removedMembers);
-
-    $sql = "START TRANSACTION;";
+    //check if admin or circle admin
+    $sql = "SELECT adminUserId FROM circles WHERE circleID = '$circleId'";
     $res = mysql_query($sql);
-    $sql = "DELETE FROM circlememberships WHERE circleID = ".$circleId." AND userID IN (".$removedMembers.")";
-    $res = mysql_query($sql);
-    $sql = "INSERT INTO circlememberships(circleId, userId) VALUES ";
-    $lastElement = end($newMembers);
-    foreach($newMembers as $newMemberId) {
-        $sql = $sql."(".$circleId.",".$newMemberId.")";
-        if($newMemberId != $lastElement)
-            $sql = $sql.",";
-    }
-    $res = mysql_query($sql);
-    $sql = "COMMIT;";            
-    $res = mysql_query($sql) or die(mysql_error());
-
-    if($res){
-        header("Location: view_circle.php?action=view&id=".$circleId);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
         exit;
+    }
+
+    else{
+        $checkedIds;
+        foreach($_POST as $key=>$value) {
+            if($key != "circleId" && $key != "modify_friend_circle")
+                $checkedIds[] = $value;
+        }
+
+        $existingMembers = $_SESSION['existingMembers'];
+
+        $newMembers = array_diff($checkedIds, $existingMembers);
+
+        $removedMembers = array();
+        foreach($existingMembers as $member){
+            if(!in_array($member, $checkedIds) && $member != $userId)
+                $removedMembers[] = $member;
+        }
+        $removedMembers = implode(", ", $removedMembers);
+
+        $sql = "START TRANSACTION;";
+        $res = mysql_query($sql);
+        $sql = "DELETE FROM circlememberships WHERE circleID = ".$circleId." AND userID IN (".$removedMembers.")";
+        $res = mysql_query($sql);
+        $sql = "INSERT INTO circlememberships(circleId, userId) VALUES ";
+        $lastElement = end($newMembers);
+        foreach($newMembers as $newMemberId) {
+            $sql = $sql."(".$circleId.",".$newMemberId.")";
+            if($newMemberId != $lastElement)
+                $sql = $sql.",";
+        }
+        $res = mysql_query($sql);
+        $sql = "COMMIT;";            
+        $res = mysql_query($sql) or die(mysql_error());
+
+        if($res){
+            header("Location: view_circle.php?action=view&id=".$circleId);
+            exit;
+        }
     }
 }
 
 if($_POST['send_message_circle'] != ""){
     $message = clean_data('send_message_circle');
     $circleID = $_POST['circleID'];
+    //autheticate user
+    $sql = "SELECT userID FROM circlememberships WHERE circleID = '$circleID'";
+    $res = mysql_query($sql);
+    $authenticate = False;
+    while($row = mysql_fetch_array($res)){
+        if($row[0] == $userId){
+            $authenticate = True;
+            break;
+        } 
+    }
+
+    if(!$isAdmin && $authenticate == False){
+        header("Location: index.php");
+        exit;
+    }
 
     $sql = "INSERT INTO messagecircles (circleID, userID, message, timeSent) VALUES ('$circleID', '$userId', '$message', now())";
     mysql_query($sql) or die(mysql_error());
@@ -250,9 +279,15 @@ if($_POST['post_blog'] != ""){
 }
 
 if($_POST['post_photo_comment'] != ""){
+    //only friends can post comments
     $photoComment = clean_data('post_photo_comment');
     $photoId = $_POST['photoId'];
 
+    //authenticate user using session variables
+    if($_SESSION['canPhotoComment'] == False){
+        header("Location: index.php");
+        exit;
+    }
     $sql = "INSERT INTO photocomments (photoID, userID, comment, dateTime) VALUES ('$photoId', '$userId', '$photoComment', now())";
     mysql_query($sql) or die(mysql_error());
     header("Location: view_photo.php");
@@ -288,6 +323,15 @@ if($_POST['new_photo_collection'] != ""){
 if($_POST['add_photo_collection'] != ""){
     if (isset($_POST['upload'])) {
         $photoCollectionId = $_POST['add_photo_collection'];
+        //authenticate user
+        $sql = "SELECT userID FROM photocollections WHERE photoCollectionID = '$photoCollectionId'";
+        $res = mysql_query($sql);
+        $row=mysql_fetch_array($res);
+        $id = $row[0];
+        if(!$isAdmin && $id!=$userId){
+            header("Location: index.php");
+            exit;
+        }
 
         $count = count($_FILES['img']['name']);
         $sql = "START TRANSACTION;";
@@ -346,6 +390,17 @@ if($_POST['like_photo_action'] != ""){
 
 if($_POST['delete_photo_comment'] != ""){
     $commentId = $_POST['delete_photo_comment'];
+
+    //authenticate request
+    $sql = "SELECT userID FROM photocomments WHERE commentID = '$commentId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
+        exit;
+    }
+
     $sql = "DELETE FROM photocomments WHERE commentId = '$commentId'";
 
     $res = mysql_query($sql) or die(mysql_error());
@@ -355,6 +410,17 @@ if($_POST['delete_photo_comment'] != ""){
 
 if($_POST['delete_post'] != ""){
     $postId = $_POST['delete_post'];
+
+    //authenticate request
+    $sql = "SELECT userID FROM blogposts WHERE postID = '$postId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
+        exit;
+    }
+
     $sql = "DELETE FROM blogposts WHERE postID = '$postId'";
 
     $res = mysql_query($sql) or die(mysql_error());
@@ -363,17 +429,43 @@ if($_POST['delete_post'] != ""){
 }
 
 if($request == "delete_message"){
-    $id = $_GET['id'];
+    $circleId = $_GET['id'];
     $postId = $_GET['postId'];
+
+    //authenticate request
+    $sql = "SELECT userID FROM messagecircles WHERE messageID = '$postId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+
+    $sql = "SELECT adminUserId FROM circles WHERE circleID = '$circleId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $circleAdminId = $row[0];
+
+    if(!$isAdmin && $id!=$userId && $circleAdminId!=$userId){
+        header("Location: index.php");
+        exit;
+    }
     $sql = "DELETE FROM messagecircles WHERE messageID = '$postId'";
 
     $res = mysql_query($sql) or die(mysql_error());
-    header("Location: view_circle.php?action=view&id=".$id);
+    header("Location: view_circle.php?action=view&id=".$circleId);
     exit;
 }
 
 if($request == "delete_circle"){
     $circleId = $_GET['circleId'];
+
+    //authenticate request
+    $sql = "SELECT adminUserId FROM circles WHERE circleID = '$circleId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
+        exit;
+    }
 
     $sql = "START TRANSACTION;";
     $res = mysql_query($sql);
@@ -392,6 +484,15 @@ if($request == "delete_circle"){
 
 if($_POST['delete_collection'] != ""){
     $collectionId = $_POST['delete_collection'];
+    //authenticate request
+    $sql = "SELECT userID FROM photocollections WHERE photoCollectionID = '$collectionId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
+        exit;
+    }
 
     $sql = "START TRANSACTION;";
     $res = mysql_query($sql);
@@ -413,6 +514,15 @@ if($_POST['delete_collection'] != ""){
 if($_POST['delete_photo'] != ""){
     $photoId = $_POST['delete_photo'];
     $collectionId = $_POST['photo_collection'];
+    //authenticate request
+    $sql = "SELECT userID FROM photocollections WHERE photoCollectionID = '$collectionId'";
+    $res = mysql_query($sql);
+    $row=mysql_fetch_array($res);
+    $id = $row[0];
+    if(!$isAdmin && $id!=$userId){
+        header("Location: index.php");
+        exit;
+    }
 
     $sql = "START TRANSACTION;";
     $res = mysql_query($sql);
@@ -431,6 +541,12 @@ if($_POST['delete_photo'] != ""){
 
 if($_POST['delete_user'] != ""){
     $userProfileId = $_POST['delete_user'];
+
+    //authenticate request
+    if(!$isAdmin && $userProfileId!=$userId){
+        header("Location: index.php");
+        exit;
+    }
 
     $sql = "START TRANSACTION;";
     $res = mysql_query($sql);
