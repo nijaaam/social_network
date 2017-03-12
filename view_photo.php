@@ -33,8 +33,9 @@
         exit;
     }
     
-    $sql = mysql_query("SELECT * FROM relationships WHERE invitationAccepted = 1 AND userID1 = ".$userId." AND userID2 =".$photoCollectionAdminId);
-    $row = mysql_fetch_array($sql, MYSQL_NUM);
+    $sql = "SELECT * FROM relationships WHERE invitationAccepted = 1 AND ((userID1 = '$userId' AND userID2 ='$photoCollectionAdminId') OR (userID2 = '$userId' AND userID1 ='$photoCollectionAdminId'))";
+    $res = mysql_query($sql);
+    $row = mysql_fetch_array($res, MYSQL_NUM);
     $friend = $row[0];
     $canComment = $friend || $userId == $photoCollectionAdminId;
     $canDeleteComment = ($userId == $photoCollectionAdminId) || $isAdmin;

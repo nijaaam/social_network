@@ -146,7 +146,7 @@ if($_POST['photo_collection_title'] != ""){
           return true;
         }
       }
-      alert("The format of the file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
+      alert("The format of the file selected is not allowed\n\n File formats allowed are JPG, JPEG, GIF, PNG ");
       return false;
     }
   </script>
