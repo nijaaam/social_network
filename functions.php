@@ -71,22 +71,37 @@ if($request == "change_privacy"){
 }
 
 if($request == "remove_admin"){
+    if(!$isAdmin){
+        header("Location: index.php");
+        exit;
+    }
     $userId = $_GET['id'];
     mysql_query("UPDATE users SET isAdmin = FALSE WHERE userId = '$userId'") or die(mysql_error());;
     header("Location: view_profile.php?action=view&id=$userId");
+    exit;
 }
 
 if($request == "make_admin"){
+    if(!$isAdmin){
+        header("Location: index.php");
+        exit;
+    }
     $userId = $_GET['id'];
     mysql_query("UPDATE users SET isAdmin = TRUE WHERE userId = '$userId'") or die(mysql_error());;
     header("Location: view_profile.php?action=view&id=$userId");
 }
 
 if($request == "delete_post"){
-    $userId = $_GET['id'];
     $postId = $_GET['postId'];
-    mysql_query("DELETE FROM blogPosts WHERE postID = '$postId'") or die(mysql_error());
-    header("Location: view_profile.php?action=view&id=$userId");
+    $profileId = $_GET['id'];
+
+    if($isAdmin){
+        mysql_query("DELETE FROM blogPosts WHERE postID = '$postId'") or die(mysql_error());
+        header("Location: view_profile.php?action=view&id=$profileId");
+        exit;
+    }
+    header("Location: index.php");
+    exit;
 }
 
 if($request == "change_privacy_admin"){
@@ -94,6 +109,10 @@ if($request == "change_privacy_admin"){
     $value = $_GET['value'];
     $id = $_GET['id'];
 
+    if(!$isAdmin){
+        header("Location: index.php");
+        exit;
+    }
     if($option == "profileView"){
         mysql_query("UPDATE securitysettings SET whoCanSeeProfile = '$value' WHERE (userID = '$id')")or die(mysql_error());
     }

@@ -19,7 +19,6 @@
         exit; 
     }
 
-//    $res = mysql_query("SELECT securitysettings.*, relationships.invitationAccepted FROM securitysettings LEFT JOIN relationships ON userID=$userId WHERE (userID1 = $userId AND userID2 =$profileUserId)");
     $res = mysql_query("SELECT * FROM securitysettings WHERE userID=".$profileUserId);
     $row = mysql_fetch_array($res) or die (mysql_error());
 
@@ -321,7 +320,7 @@
                                  <p><?php echo $postBody ?></p>
                                </div>
                                <?php if($isAdmin) { ?>
-                                  <a href="functions.php?action=view&request=delete_post&id=<?php echo $profileUserId?>&postId=<?php echo $postId?>">
+                                  <a href="functions.php?action=view&request=delete_post&postId=<?php echo $postId?>&id=<?php echo $profileUserId?>">
                                       <button style="float:left" type="submit" name="deletePost" class="btn btn-danger">Delete</button>
                                   </a>
                                <?php }?>
@@ -379,10 +378,6 @@
                   $whoCanSeeBlogText = $whoCanSeeOptions[$whoCanSeeBlogValue];
                   $whoCanSeeProfileText = $whoCanSeeOptions[$whoCanSeeProfileValue];
 
-                  //                  $whoCanSendFriendRequests = $adminRow['whoCanSendFriendRequests'];
-                  //                  $whoCanSendFriendRequestsOptions = array("Everyone", "Friends of friends");
-
-                  // Will deal with these cases later if we have time
                   $visibleName = $adminRow['visibleName'];
                   $visiblePersonalInfo = $adminRow['visiblePersonalInfo'];
                   // By default values are equal to 0 which means everyone has these visibility privileges.

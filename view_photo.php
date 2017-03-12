@@ -16,7 +16,7 @@
     $image = "";
     $photoId = "";
     $photoCollectionAdminId = "";
-    if($_POST['view_photo'] != ""){
+    if($_POST['view_photo'] != "" && ($_SESSION['collectionId'] == $_POST['photoCollectionId'])){
         $image = $_POST['view_photo'];
         $photoId = $_POST['photoId'];
         $photoCollectionAdminId = $_POST['photoAdminId'];

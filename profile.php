@@ -9,7 +9,6 @@ if( !isset($_SESSION['user']) ) {
   exit;
 }
 
-
 $userId = $_SESSION['user'];
 $email = $_SESSION['email'];
 require_once 'check_admin.php';

@@ -11,7 +11,7 @@ $userId = $_SESSION['user'];
 
 $photoCollectionId = $_SESSION['collectionId'];
 if(empty($photoCollectionId)){
-    header("Location: index.php");
+    header("Location: photos.php");
     exit;
 }
 
