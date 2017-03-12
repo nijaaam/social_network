@@ -84,11 +84,11 @@ require_once 'check_admin.php';
                     $otherPhotoCollectionsQuery = "SELECT photoCollectionID, name, whoCanSee, firstName, surname FROM photocollections as p, personalinfo as pi 
                     WHERE 
                     (
-                    ((whoCanSee = 0 OR whoCanSee = 2) AND EXISTS (SELECT * FROM relationships WHERE userID1 = p.userID AND userID2 = ".$userId."))  
+                    ((whoCanSee = 0 OR whoCanSee = 2) AND (EXISTS (SELECT * FROM relationships WHERE userID1 = p.userID AND userID2 = ".$userId.")) OR (EXISTS (SELECT * FROM relationships WHERE userID2 = p.userID AND userID1 = ".$userId.")) )  
                     OR
                     (whoCanSee = 1 AND EXISTS (SELECT circleID FROM `circlememberships` WHERE userID IN (p.userID,".$userId.") GROUP BY circleID HAVING COUNT(*)>1))
                     OR
-                    (whoCanSee = 2 AND EXISTS (SELECT F2.userID1 FROM relationships F JOIN relationships F2 ON F.userID1 = F2.userID2 WHERE F2.userID1 NOT IN (SELECT userID1 FROM relationships WHERE userID2 = p.userID) AND F.userID2 = p.userID AND F2.userID1 = ".$userId."))
+                    (whoCanSee = 2 AND (p.userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1') OR p.userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR p.userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR p.userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1')) AND p.userID NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND p.userID NOT IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1'))
                     )    
                     AND p.userID = pi.userID";
                 }
@@ -110,7 +110,8 @@ require_once 'check_admin.php';
                         <div class="row member-row">
                           <div class="col-md-5">
                             <h3>&nbsp;&nbsp;&nbsp;
-                                <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
+                            <!-- use a session variable to make it more secure -->
+                                <a href="functions.php?request=view_collection&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
                             </h3>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner ?></h5>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visible to: <?php echo $visibilityOptions[$whoCanSee]?></h5>
@@ -142,7 +143,8 @@ require_once 'check_admin.php';
                         <div class="row member-row">
                           <div class="col-md-5">
                             <h3>&nbsp;&nbsp;&nbsp;
-                                <a href="view_photo_collection.php?action=view&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
+                            <!-- autheticate the request in functions.php -->
+                                <a href="functions.php?request=view_collection&id=<?php echo $photoCollectionId?>"><?php echo $name?></a>
                             </h3>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collection Owner: <?php echo $colletionOwner ?></h5>
                             <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visible to: <?php echo $visibilityOptions[$whoCanSee]?></h5>

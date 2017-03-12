@@ -3,13 +3,20 @@ ob_start();
 session_start();
 require_once 'dbconnect.php';
 include_once 'validation_functions.php';
+include_once 'check_admin.php';
 
-$userId = $_SESSION['user'];
+if(isset($_SESSION['user'])){
+    $userId = $_SESSION['user'];   
+}
+else{
+    header("Location: index.php");
+    exit;
+}
+
 $request = $_GET['request'];
 
 if($request == "add_friend"){
     $friendId = $_GET['id'];
-    echo $userId;
     $query = "INSERT INTO relationships VALUES($userId,$friendId,$userId,0,now(),now());"; 
     mysql_query($query) or die(mysql_error());
     header("Location: friends.php");
@@ -33,7 +40,6 @@ if($request == "reject_friend_request"){
 if($request == "change_privacy"){
     $option = $_GET['option'];
     $value = $_GET['value'];
-
     if($option == "profileView"){
         mysql_query("UPDATE securitysettings SET whoCanSeeProfile = '$value' WHERE (userID = '$userId')")or die(mysql_error());
         header("Location: profile.php");
@@ -47,10 +53,20 @@ if($request == "change_privacy"){
     }
 
     if($option == "photoCollection"){
+        //check if the current user id the owner of the photo collection
         $id = $_GET['id'];
-        mysql_query("UPDATE photoCollections SET whoCanSee = '$value' WHERE (photoCollectionID = '$id')")or die(mysql_error());
-        header("Location: view_photo_collection.php?action=view&id=".$id);
+        $res = mysql_query("SELECT userID FROM photocollections WHERE photocollectionID = '$id'")or die(mysql_error());
+        $row=mysql_fetch_array($res);
+
+        if($row[0] == $userId || $isAdmin){
+            mysql_query("UPDATE photoCollections SET whoCanSee = '$value' WHERE (photoCollectionID = '$id')")or die(mysql_error());
+            header("Location: view_photo_collection.php?action=view&id=".$id);
+            exit;
+        }
+        else{
+        header("Location: logout.php?logout");
         exit;
+        }
     }
 }
 
@@ -88,6 +104,38 @@ if($request == "change_privacy_admin"){
 
     header("Location: view_profile.php?action=view&id=$id");
     exit;
+}
+
+// check user permisssions t to view photo collection
+if($request == "view_collection"){
+    $collectionId = $_GET['id'];
+    if($isAdmin){
+        $_SESSION['collectionId'] = $collectionId;
+        header("Location: view_photo_collection.php");
+        exit;
+    }
+    else{
+        $query = "SELECT photoCollectionID FROM photocollections WHERE (userID = '$userId') OR photocollectionID IN (SELECT photoCollectionID FROM photocollections WHERE 
+                    (
+                    ((whoCanSee = 0 OR whoCanSee = 2) AND (EXISTS (SELECT * FROM relationships WHERE userID1 = userID AND userID2 = '$userId')) OR (EXISTS (SELECT * FROM relationships WHERE userID2 = userID AND userID1 = '$userId')) )  
+                    OR
+                    (whoCanSee = 1 AND EXISTS (SELECT circleID FROM `circlememberships` WHERE userID IN (userID,'$userId') GROUP BY circleID HAVING COUNT(*)>1))
+                    OR
+                    (whoCanSee = 2 AND (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1')) AND userID NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID NOT IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1'))
+                    ));";
+
+        $res = mysql_query($query);
+
+        while($row = mysql_fetch_array($res)){
+            if($row[0] == $collectionId){
+                $_SESSION['collectionId'] = $collectionId;
+                header("Location: view_photo_collection.php");
+                exit;
+            }
+        }
+        header("Location: photos.php");
+        exit;
+    }
 }
 
 if($_POST['add_friend_circle']){
@@ -408,10 +456,6 @@ if($_POST['delete_user'] != ""){
     $sql = "DELETE FROM blogposts WHERE userID = '$userProfileId'";
     $res = mysql_query($sql) or die(mysql_error());
 
-    //delete all of their general settings
-    $sql = "DELETE FROM generalsettings WHERE userID = '$userProfileId'";
-    $res = mysql_query($sql) or die(mysql_error());
-
     //delete all of their messages in message circles
     $sql = "DELETE FROM messagecircles WHERE userID = '$userProfileId'";
     $res = mysql_query($sql) or die(mysql_error());
@@ -447,3 +491,6 @@ if($_POST['delete_user'] != ""){
     exit;
 }
 ?>
+
+
+              

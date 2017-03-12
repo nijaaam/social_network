@@ -134,7 +134,13 @@
                             <span style="float:right; font-family:sans-serif">
                                 <form method="post" action="functions.php">
                                     <input type="hidden" name="photoId" value="<?php echo $photoId ?>"/>    
-                                    <input type="hidden" name="like_photo_action" value="<?php echo $likeAction ?>"/>    
+                                    <input type="hidden" name="like_photo_action" value="<?php echo $likeAction ?>"/> 
+                                     <?php 
+                                      $_SESSION['image'] = $image;
+                                      $_SESSION['photoId'] = $photoId;
+                                      $_SESSION['photoAdminId'] = $photoCollectionAdminId;
+                                      $_SESSION['photoCollectionId'] = $photoCollectionAdminId;
+                                    ?>  
                                     <button type="submit" class="btn btn-primary"><?php echo $likeAction?></button>
                                 </form>
                             </span>

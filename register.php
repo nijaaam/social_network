@@ -45,7 +45,7 @@ if ( isset($_POST['btn-signup']) ) {
 		$query = "INSERT INTO users(email,password,securityQuestion,securityAnswer,isAdmin) 
 		VALUES('$email','$password','$securityQuestion', '$securityAnswer', FALSE);";
 		$res = mysql_query($query);
-		$query = "INSERT INTO personalinfo(userID, firstName, surname, gender, city, country, birthday) VALUES((SELECT userID from users WHERE email = '$email'),'$firstName','$surname','$gender','$city','$country','$birthday');";
+		$query = "INSERT INTO personalinfo(userID, firstName, surname, gender, city, country, birthday, picture) VALUES((SELECT userID from users WHERE email = '$email'),'$firstName','$surname','$gender','$city','$country','$birthday', '');";
 		$res = mysql_query($query);
 		$query = "INSERT INTO securitysettings(userID, whoCanSeeBlog, whoCanSeeProfile, whoCanSendFriendRequests, visibleName, visiblePersonalInfo) VALUES ((SELECT userID from users WHERE email = '$email'), 1, 1, 0, 0, 0);";
 		$res = mysql_query($query);

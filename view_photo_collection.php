@@ -9,9 +9,9 @@ if (!isset($_SESSION['user'])) {
 $email  = $_SESSION['email'];
 $userId = $_SESSION['user'];
 
-$photoCollectionId = $_GET['id'];
+$photoCollectionId = $_SESSION['collectionId'];
 if(empty($photoCollectionId)){
-    header("Location: photos.php");
+    header("Location: index.php");
     exit;
 }
 
