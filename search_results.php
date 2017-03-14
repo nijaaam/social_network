@@ -18,6 +18,7 @@ function search_members($search_term, $friendId, $filterFriendsOfFriends){
     if($filterFriendsOfFriends != "on"){
                     // search all users with search query
       $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
+      print_r($query);
     }
     else{
                     // friends of friends with search query.
@@ -30,7 +31,12 @@ function search_members($search_term, $friendId, $filterFriendsOfFriends){
   }
   else{
                 // Collaborative filtering method query goes here.
-    $query = "SELECT * FROM personalinfo WHERE (userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID2 != '$userId' AND invitationAccepted = '1') OR userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID1 != '$userId' AND invitationAccepted = '1')) AND userID NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID NOT IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1')";
+    $cityQuery = "SELECT city FROM personalinfo WHERE userID = '$userId'";
+    $res = mysql_query($cityQuery);
+    $row=mysql_fetch_array($res);
+    $city = $row[0];
+
+    $query = "SELECT * FROM personalinfo WHERE ((userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND invitationAccepted = '1') OR userID IN (SELECT userID2 FROM relationships WHERE userID1 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND invitationAccepted = '1') OR userID IN (SELECT userID1 FROM relationships WHERE userID2 IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND invitationAccepted = '1'))  OR (city = '$city')) AND userID NOT IN (SELECT userID1 FROM relationships WHERE userID2 = '$userId' AND invitationAccepted = '1') AND userID NOT IN (SELECT userID2 FROM relationships WHERE userID1 = '$userId' AND invitationAccepted = '1') AND userID != '$userId'";
   }
   
   $sql = mysql_query($query) or die (mysql_error());

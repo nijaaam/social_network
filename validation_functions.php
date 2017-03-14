@@ -3,7 +3,8 @@
 	// clean user inputs 
 	function clean_data($name){
 		$value = trim($_POST[$name]);
-		$value = htmlspecialchars($value);
+		$value = htmlspecialchars($value, ENT_QUOTES);
+		$value = mysql_real_escape_string($value);
 		$value = strip_tags($value);
 
 		return $value;

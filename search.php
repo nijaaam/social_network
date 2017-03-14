@@ -161,8 +161,7 @@ else if(empty($_GET) && empty($_POST)){
           if(isset($_POST['search_friends'])){
                         // Search by search query
             $filterFriendsOfFriends = $_POST['friends_of_friends'];
-            $search_term = $_POST['search_friends'];
-            search_members($search_term, 0, $filterFriendsOfFriends);
+            search_members($searchQuery, 0, $filterFriendsOfFriends);
         }
         else if(isset($_GET['search_friends_of_friends'])){
                         // Search by friends of friends
@@ -170,8 +169,7 @@ else if(empty($_GET) && empty($_POST)){
             search_members(0, $id, 0);
         }
         else if(isset($_POST['search_friend_blogs'])){
-            $search_term = $_POST['search_friend_blogs'];
-            search_friend_blogs($search_term);         
+            search_friend_blogs($searchQuery);         
         }
         else{
                         // Default search on search page. "Suggested friends".
