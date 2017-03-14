@@ -142,16 +142,18 @@
 
                 <?php
                 $canSeeProfile = $row['whoCanSeeProfile'] == 0 || ($row['whoCanSeeProfile'] == 1 && $isFriends || $isAdmin);
+
+                $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$profileUserId' AND users.userID = '$profileUserId'";
+                $res = mysql_query($query) or die(mysql_error());
+                $userRow = mysql_fetch_array($res);
+                $profileFullName = $userRow['firstName'] . " " . $userRow['surname'];
+                $content = base64_encode($userRow['picture']);
+                $image = "data:image/jpeg;base64,". $content;
+                if($content == ""){
+                  $image = "img/user.png";
+                }
+
                 if($canSeeProfile) {
-                    $query = "SELECT personalinfo.*, users.email FROM personalinfo, users WHERE personalinfo.userID='$profileUserId' AND users.userID = '$profileUserId'";
-                    $res = mysql_query($query) or die(mysql_error());
-                    $userRow = mysql_fetch_array($res);
-                    $profileFullName = $userRow['firstName'] . " " . $userRow['surname'];
-                    $content = base64_encode($userRow['picture']);
-                    $image = "data:image/jpeg;base64,". $content;
-                    if($content == ""){
-                      $image = "img/user.png";
-                    }
                 ?>
 
                     <h1 class="page-header"><?php echo $profileFullName ?></h1>
@@ -260,7 +262,7 @@
                     <h1 class="page-header"><?php echo $userRow['firstName'] . " " . $userRow['surname']; ?></h1>
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="img/user.png" class="img-thumbnail" alt="">
+                            <img src="<?php echo "$image"; ?>" class="img-thumbnail" alt="">
                         </div>
 
                         <div class="col-md-8">
@@ -501,7 +503,7 @@
         });
 
 function confirm_delete(){
-  if(confirm("This action will delete the user's photo collections, blog posts and circles which they are an administor in.\n\nAre you sure you want to delete this user?")){
+  if(confirm("This action will delete the user's photo collections, blog posts and circles which they are an administor in.\n\nAre you sure you want to delete this User?")){
   return true;
   }
   return false;
