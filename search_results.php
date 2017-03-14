@@ -18,7 +18,6 @@ function search_members($search_term, $friendId, $filterFriendsOfFriends){
     if($filterFriendsOfFriends != "on"){
                     // search all users with search query
       $query = "SELECT * FROM `personalinfo` WHERE (`firstName` LIKE '%$search_term%' OR `surname` LIKE '%$search_term%') AND `userID` != '".$userId."'";
-      print_r($query);
     }
     else{
                     // friends of friends with search query.
