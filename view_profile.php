@@ -62,7 +62,7 @@
             $query = "UPDATE personalinfo SET firstName = '$firstName', surname = '$surname', gender = '$gender', city = '$city', country = '$country', birthday = '$birthday' WHERE userID = '$profileUserId'";
             $res = mysql_query($query) or die(mysql_error());
 
-            $query = "UPDATE users SET email = '$email' WHERE userID = '$profileUserId'";
+            $query = "UPDATE users SET email = '$email_new' WHERE userID = '$profileUserId'";
             $res = mysql_query($query) or die(mysql_error());
 
             header("Location: view_profile.php?action=view&id=$profileUserId");  // Refresh page
