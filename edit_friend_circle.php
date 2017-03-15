@@ -107,7 +107,7 @@
     </nav>
       
     <?php 
-        $sql = mysql_query(" SELECT userID, firstName, surname FROM personalinfo, relationships WHERE (userID1 = '".$userId."' AND userID2 = userID AND invitationAccepted = 1)") or die (mysql_error()); 
+        $sql = mysql_query(" SELECT userID, firstName, surname FROM personalinfo, relationships WHERE (userID1 = '".$userId."' AND userID2 = userID AND invitationAccepted = 1) or (userID2 = '".$userId."' AND userID1 = userID AND invitationAccepted = 1)") or die (mysql_error()); 
             $array = array();
             while ($row = mysql_fetch_array($sql, MYSQL_NUM)) {
                 $array[] = $row;
