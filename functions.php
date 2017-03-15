@@ -315,6 +315,7 @@ if($_POST['new_photo_collection'] != ""){
         $sql = "COMMIT;";            
         $res = mysql_query($sql) or die(mysql_error());
 
+        $_SESSION['collectionId'] = $photoCollectionId;
         header("Location: view_photo_collection.php?action=view&id=".$photoCollectionId);
         exit;
     }
