@@ -19,6 +19,9 @@
 	}
 
 	function upload_user($arr){
+		global $currentEmail;
+		global $currentUserId;
+
 		$keys = array_keys($arr);
 		$userID = $arr[$keys[0]];
 		$email = $arr[$keys[1]];
