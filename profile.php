@@ -241,16 +241,10 @@ if ( isset($_POST['edit-submit']) ) {
                               </br>
                               <li>
                                 <form action="import.php" method="post" enctype="multipart/form-data">
+                                  <input id = "file" type="file" name="xml">
                                   <button id = "import" type="submit" name="import" class="btn btn-default" style="margin-bottom: 10px;">
                                     Import XML</button>
-                                    <input id = "file" type="file" name="xml">
                                   </form>
-                                  <script type="text/javascript">
-                                    $('#import').click(function(){
-                                      $('#file').trigger('click');
-                                      return false;
-                                    });
-                                  </script>
                                 </li>
                               </br>
                               <li>
@@ -506,7 +500,7 @@ if ( isset($_POST['edit-submit']) ) {
        return true;
      }
    }
-   alert("The format of the file selected is not allowed\n\n File formats allowed are JPG, JPEG, GIF, PNG ");
+   alert("The format of the file selected is not allowed, file formats allowed are JPG, JPEG, GIF, PNG ");
    return false;
  }
 </script>

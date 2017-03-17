@@ -2,6 +2,14 @@
 	ob_start();
 	session_start();
 	require_once 'dbconnect.php';
+
+	if (!isset($_SESSION['user'])) {
+   		header("Location: index.php");
+   		exit;
+	}
+	$currentEmail  = $_SESSION['email'];
+	$currentUserId = $_SESSION['user'];
+
 	function clean_data($arr,$id){
 		$name = $arr[$id];
 		$value = trim($name);
@@ -18,6 +26,12 @@
 		$q = $arr[$keys[3]];
 		$a = $arr[$keys[4]];
 		$admin = $arr[$keys[5]];
+
+		if(($currentUserId != $userID) || ($currentEmail != $email)){
+			header("location: profile.php");
+			exit;
+		}
+
 		$query = "INSERT INTO users VALUES('$userID','$email','$pass','$q','$a','$admin')
 		ON DUPLICATE KEY UPDATE 
 		email = '$email', password = '$pass', securityQuestion = '$q', securityAnswer = '$a' , isAdmin = '$admin'";
@@ -78,6 +92,18 @@
 		mysql_query($query) or die(mysql_error());
 	}
 
+	
+	function upload_photoc($arr){
+		$keys = array_keys($arr);
+		$a = $arr[$keys[0]];
+		$b = $arr[$keys[1]];
+		$c = $arr[$keys[2]];
+		$d = $arr[$keys[3]];
+		$query = "INSERT INTO photocollections VALUES('$a','$b','$c','$d')
+		ON DUPLICATE KEY UPDATE userID = '$b', name = '$c', whoCanSee ='$d'";
+		mysql_query($query) or die(mysql_error());
+	}
+
 	function upload_photo($arr){
 		$keys = array_keys($arr);
 		$a = $arr[$keys[0]];
@@ -88,17 +114,6 @@
 		$f = $arr[$keys[5]];
 		$query = "INSERT INTO photos VALUES('$a','$b','$c','$d','$e','$f')
 		ON DUPLICATE KEY UPDATE photoCollectionID = '$b', image = '$c', name ='$d' , caption = '$e', dateUploaded = '$f'";
-		mysql_query($query) or die(mysql_error());
-	}
-
-	function upload_photoc($arr){
-		$keys = array_keys($arr);
-		$a = $arr[$keys[0]];
-		$b = $arr[$keys[1]];
-		$c = $arr[$keys[2]];
-		$d = $arr[$keys[3]];
-		$query = "INSERT INTO photocollections VALUES('$a','$b','$c','$d')
-		ON DUPLICATE KEY UPDATE userID = '$b', name = '$c', whoCanSee ='$d'";
 		mysql_query($query) or die(mysql_error());
 	}
 
@@ -117,7 +132,7 @@
 		$b = $arr[$keys[1]];
 		$c = $arr[$keys[2]];
 		$d = $arr[$keys[3]];
-		$d = $arr[$keys[4]];
+		$e = $arr[$keys[4]];
 		$query = "INSERT INTO photocomments VALUES('$a','$b','$c','$d','$e')
 		ON DUPLICATE KEY UPDATE userID = '$c', photoID = '$b', comment ='$d', dateTime = '$e'";
 		mysql_query($query) or die(mysql_error());
@@ -143,7 +158,6 @@
 	}
 
 	function upload_circle_messages($arr){
-		print_r($arr);
 		$keys = array_keys($arr);
 		$a = $arr[$keys[0]];
 		$b = $arr[$keys[1]];
@@ -158,35 +172,100 @@
 	if (isset($_FILES['xml']) && ($_FILES['xml']['error'] == UPLOAD_ERR_OK)) {
 	    $xml = simplexml_load_file($_FILES['xml']['tmp_name']);       
 	    $array = json_decode(json_encode($xml), TRUE);
-	    upload_user($array['user']); 
+	    upload_user($array['user']);
 	    upload_personalInfo($array['personalinfo']);
 	    upload_security($array['security']);
-	    foreach ($array['friends']['friend'] as $value) {
-	    	upload_friends($value); 
+
+
+	    foreach ($array['friends']as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $friend){
+	    			upload_friends($friend);
+	    		}
+	    	}
+	    	else{
+	    		upload_friends($value);
+	    	}
 	    } 
-	    foreach ($array['blogs']['post'] as $value) {
-	    	upload_posts($value); 
+	    foreach ($array['blogs'] as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $post){
+	    			upload_posts($post);
+	    		}
+	    	}
+	    	else{
+	    		upload_posts($value);
+	    	}
 	    }
-	    foreach ($array['photocollections']['photocollection'] as $value) {
-	    	upload_photoc($value); 
+	    foreach ($array['photocollections'] as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $photocollection){
+	    			upload_photoc($photocollection);
+	    		}
+	    	}
+	    	else{
+	    		upload_photoc($value);
+	    	}
 	    } 
-	    foreach ($array['photos']['photo'] as $value) {
-	    	upload_photo($value);
+	    foreach ($array['photos'] as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $photo){
+	    			upload_photo($photo);
+	    		}
+	    	}
+	    	else{
+	    		upload_photo($value);
+	    	}
 	    }
-	    foreach ($array['photolikes']['likes'] as $value) {
-	    	upload_photolikes($value); 
+	    foreach ($array['photolikes'] as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $likes){
+	    			upload_photolikes($likes);
+	    		}
+	    	}
+	    	else{
+	    		upload_photolikes($value);
+	    	}
 	    }
-	    foreach ($array['photocomments']['comments'] as $value) {
-	    	upload_photocmnt($value);
+	    foreach ($array['photocomments'] as $value) {
+			if(is_array($value[0])){
+	    		foreach($value as $comments){
+	    			upload_photocmnt($comments);
+	    		}
+	    	}
+	    	else{
+	    		upload_photocmnt($value);
+	    	}
 	    }
-	    foreach ($array['circles_admin']['circle'] as $value) {
-	    	upload_circles($value); 
+	    foreach ($array['circles_admin'] as $value) {
+	 		if(is_array($value[0])){
+	    		foreach($value as $cirlce){
+	    			upload_circles($cirlce);
+	    		}
+	    	}
+	    	else{
+	    		upload_circles($value);
+	    	}
 	    }
-	    foreach ($array['circles_member']['circle'] as $value) {
-	    	upload_circle_member($value); 
+	    foreach ($array['circles_member'] as $value) {
+	    	if(is_array($value[0])){
+	    		foreach($value as $cirlce){
+	    			upload_circle_member($cirlce);
+	    		}
+	    	}
+	    	else{
+	    		upload_circle_member($value);
+	    	}
 	    }
-	    foreach ($array['circles_messages']['messages'] as $value) {
-	    	upload_circle_messages($value); 
+	    foreach ($array['circles_messages'] as $value) {
+	   		if(is_array($value[0])){
+	    		foreach($value as $messages){
+	    			upload_circle_messages($messages);
+	    		}
+	    	}
+	    	else{
+	    		upload_circle_messages($value);
+	    	}
 	    }        
 	}
 	header("location: profile.php");
