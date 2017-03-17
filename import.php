@@ -186,7 +186,7 @@
 	    			upload_friends($friend);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_friends($value);
 	    	}
 	    } 
@@ -196,7 +196,7 @@
 	    			upload_posts($post);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_posts($value);
 	    	}
 	    }
@@ -206,7 +206,7 @@
 	    			upload_photoc($photocollection);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_photoc($value);
 	    	}
 	    } 
@@ -216,7 +216,7 @@
 	    			upload_photo($photo);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_photo($value);
 	    	}
 	    }
@@ -226,7 +226,7 @@
 	    			upload_photolikes($likes);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_photolikes($value);
 	    	}
 	    }
@@ -236,7 +236,7 @@
 	    			upload_photocmnt($comments);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_photocmnt($value);
 	    	}
 	    }
@@ -246,7 +246,7 @@
 	    			upload_circles($cirlce);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_circles($value);
 	    	}
 	    }
@@ -256,7 +256,7 @@
 	    			upload_circle_member($cirlce);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_circle_member($value);
 	    	}
 	    }
@@ -266,7 +266,7 @@
 	    			upload_circle_messages($messages);
 	    		}
 	    	}
-	    	else{
+	    	else if(is_array($value)){
 	    		upload_circle_messages($value);
 	    	}
 	    }        
